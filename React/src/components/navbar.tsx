@@ -1,6 +1,7 @@
 import {NavLink} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {validateLogin} from "./validation.ts";
+import eventEmitter from "../misc/eventEmitter.tsx";
 
 function Navbar() {
 
@@ -11,6 +12,15 @@ function Navbar() {
             setIsAuth(await validateLogin() !== null);
         }
         setAuth().then(null);
+
+        const handleAuthChange = (authStatus: boolean) => {
+            setIsAuth(authStatus);
+        };
+
+        eventEmitter.on('authChange', handleAuthChange);
+        return () => {
+            eventEmitter.off('authChange', handleAuthChange);
+        };
     }, []);
 
     return (

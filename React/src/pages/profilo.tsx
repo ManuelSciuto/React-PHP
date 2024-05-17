@@ -3,6 +3,8 @@ import {validateLogin} from "../components/validation.ts";
 import {useNavigate} from "react-router-dom";
 import {ClientData} from "../misc/classes/ClientData.ts";
 import {EmployeeData} from "../misc/classes/EmployeeData.ts";
+import {tokenName} from "../../../config.ts";
+import eventEmitter from "../misc/eventEmitter.tsx";
 
 function Profilo() {
 
@@ -24,7 +26,6 @@ function Profilo() {
     useEffect(() => {
         async function getUser() {
             if (!isAuth) return;
-            console.log(1)
             const req = {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -33,12 +34,14 @@ function Profilo() {
             const response = await fetch('http://localhost:8000/users/get_user.php', req);
             if (response.ok) {
                 const data = await response.json();
-                if (Object.prototype.hasOwnProperty.call(data, "tax_code")) {
+                if (Object.prototype.hasOwnProperty.call(data, "tax_code") && (data.tax_code !== undefined)) {
                     setUser(new EmployeeData(data));
-                } else {
+                } else if (Object.prototype.hasOwnProperty.call(data, "vat_number") && (data.vat_number !== undefined)){
                     setUser(new ClientData(data));
+                } else {
+                    window.alert("Errore nel caricamento dei dati, ci scusiamo per l'inconveniente. Verrai reindirizzato alla home");
+                    nav("/")
                 }
-                console.log(user)
             }
         }
         getUser().then(null);
@@ -55,6 +58,14 @@ function Profilo() {
         }
     }, [isAuth, nav]);
 
+    const handleDisconnetti = () => {
+        setIsAuth(false);
+        setUserId(-1);
+        setUser(null);
+        localStorage.removeItem(tokenName);
+        eventEmitter.emit('authChange', false);
+        nav("/");
+    }
 
     if (!isAuth) {
         return <div>
@@ -67,8 +78,9 @@ function Profilo() {
 
     return (
         <div>
-            <div className="w-3/4 flex p-2 border-2 mx-auto mt-5 rounded-lg">
-                {user && <p>{user!.username}</p>}
+            <div className="w-3/4 flex justify-between p-2 border-2 mx-auto mt-5 rounded-lg">
+                {user && <p className="py-1.5 px-5 text-lg font-semibold rounded-md  bg-blue-500">{user!.username}</p>}
+                <button onClick={handleDisconnetti}>Disconnetti</button>
             </div>
         </div>
     );

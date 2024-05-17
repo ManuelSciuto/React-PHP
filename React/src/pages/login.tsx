@@ -1,8 +1,9 @@
 import React, {useState} from "react";
 import {ALG, jwtKey, tokenName} from "../../../config.ts";
 import * as jwt from "jose";
-import {useNavigate} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import {sleep} from "../components/sleep.ts";
+import eventEmitter from "../misc/eventEmitter.tsx";
 
 function Login() {
 
@@ -36,6 +37,7 @@ function Login() {
                 };
                 const token = await new jwt.SignJWT(tokenData).setProtectedHeader({alg:ALG}).sign(jwtKey);
                 localStorage.setItem(tokenName, token);
+                eventEmitter.emit('authChange', true);
                 nav("/");
             } else if (Object.prototype.hasOwnProperty.call(responseData, 'error')) {
                 await handleError(responseData.error);
@@ -72,7 +74,7 @@ function Login() {
                     <button type="submit" onClick={(e) => handleSubmit(e)} className="bg-blue-500 mt-2 hover:bg-blue-600 text-white p-3 rounded-lg text-xl font-bold w-full">Log in</button>
                 </form>
             </div>
-            <div className="w-1/2 flex mt-2 justify-center max-w-md font-medium gap-x-1 rounded-lg p-2 mx-auto border-2">Non hai un account? <button className="text-blue-500 hover:text-blue-600">Registrati</button></div>
+            <div className="w-1/2 flex mt-2 justify-center max-w-md font-medium gap-x-1 rounded-lg p-2 mx-auto border-2">Non hai un account? <NavLink to="/Registrazione" className="text-blue-500 hover:text-blue-600">Registrati</NavLink></div>
         </div>
     );
 }
