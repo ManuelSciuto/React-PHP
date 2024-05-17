@@ -1,0 +1,76 @@
+const [Users, setUsers] = useState<string[][]>([]);
+
+  const [newUser, setNewUser] = useState<NewUser>({
+    username: "",
+    password: "",
+    name: "",
+    surname: "",
+  });
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNewUser((prevUser) => ({
+      ...prevUser,
+      [event.target.name]: event.target.value,
+    }));
+    console.log(newUser);
+  };
+
+  const handleCreateUser = () => {
+    fetch("http://localhost:8000/CRUD/create_user.php", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newUser),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("User created successfully:", data);
+        window.location.reload();
+        // You may want to update state or perform other actions after successful creation
+      })
+      .catch((error) => {
+        console.error("Error creating user:", error);
+      });
+  };
+
+  const handleDelete = (userId: string) => {
+    fetch(`http://localhost:8000/CRUD/delete_user.php?id=${userId}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (response.ok) {
+          console.log("User deleted successfully");
+          // Reload the window after successful deletion
+          window.location.reload();
+          return null; // Returning null to skip the next 'then' block
+        } else {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+      })
+      .then((data) => {
+        if (data) {
+          console.error("Error deleting user:", data);
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting user:", error.message);
+      });
+  };
+
+  useEffect(() => {
+    fetch("http://localhost:8000/CRUD/get_user.php", {
+      method: "get",
+    })
+      .then(function (response) {
+        if (response.status >= 200 && response.status < 300) {
+          return response.text();
+        }
+        throw new Error(response.statusText);
+      })
+      .then((response): any => {
+        var arr_data = response.split("<br>").map((user) => user.split(","));
+        arr_data.pop();
+        setUsers(arr_data);
+      });
+  }, []);
