@@ -54,6 +54,7 @@ function Registrazione() {
                 phone_num: phone_num,
                 vat_number: vat_number,
                 company_name: company_name,
+                client_since: getCurrentDate()
             })
         };
         const response = await fetch('http://localhost:8000/users/add_client.php', req);

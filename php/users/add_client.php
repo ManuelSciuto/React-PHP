@@ -11,8 +11,9 @@ $address = isset($data['address']) ? $data['address'] : "";
 $phone_num = isset($data['phone_num']) ? $data['phone_num'] : "";
 $vat_number = isset($data['vat_number']) ? $data['vat_number'] : "";
 $company_name = isset($data['company_name']) ? $data['company_name'] : null;
+$client_since = isset($data['client_since']) ? $data['client_since'] : "";
 
-if (!empty($username) && !empty($password) && !empty($name) && !empty($surname) && !empty($address) && !empty($phone_num) && !empty($vat_number))
+if (!empty($username) && !empty($password) && !empty($name) && !empty($surname) && !empty($address) && !empty($phone_num) && !empty($vat_number) && !empty($client_since))
 {
     $query = "INSERT INTO users (username, password) VALUES (?, ?)";
         $stmt = mysqli_prepare($conn, $query);
@@ -37,9 +38,9 @@ if (!empty($username) && !empty($password) && !empty($name) && !empty($surname) 
             echo "Impossibile inserire l'utente";
             return;
         }
-        $query = "INSERT INTO clients (client_id, vat_number, company_name) VALUES (?, ?, ?)";
+        $query = "INSERT INTO clients (client_id, vat_number, company_name, client_since) VALUES (?, ?, ?, ?)";
         $stmt = mysqli_prepare($conn, $query);
-        mysqli_stmt_bind_param($stmt, "iss", $client_id, $vat_number, $company_name);
+        mysqli_stmt_bind_param($stmt, "iss", $client_id, $vat_number, $company_name, $client_since);
         $stmt->execute();
         $result = $stmt->affected_rows;
         if ($result <= 0) {

@@ -8,17 +8,17 @@ import eventEmitter from "../misc/eventEmitter.tsx";
 import {sleep} from "../components/sleep.ts";
 import OptionIcon from "../components/svgs/optionIcon.tsx";
 import LoadingSpinner from "../components/svgs/loadingSpinner.tsx";
+import NoUserCountdown from "../components/noUserCountdown.tsx";
 
 function Profilo() {
 
     const [showOpts, setShowOpts] = useState(false);
-    const [isAuth, setIsAuth] = useState(false);
     const [optsError, setOptsError] = useState("");
     const [isDeleting, setIsDeleting] = useState(false);
     const [dataUpdateError, setDataUpdateError] = useState("");
     const [isUpdatingData, setIsUpdatingData] = useState(false);
-    const [countdown, setCountdown] = useState(5);
     const [userId, setUserId] = useState(-1);
+    const [isEmployee, setIsEmployee] = useState(false);
     const [user, setUser] = useState<ClientData|EmployeeData|null>(null);
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
@@ -27,12 +27,12 @@ function Profilo() {
 
     async function setAuth() {
         const id = await validateLogin();
-        setIsAuth(id !== null);
-        if (id) setUserId(id);
+        if (id === null || id <= 0) setUserId(-1);
+        else if (id > 0) setUserId(id);
     }
 
     async function getUser() {
-        if (!isAuth) return;
+        if (userId === -1) return;
         const req = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -41,9 +41,11 @@ function Profilo() {
         const response = await fetch('http://localhost:8000/users/get_user.php', req);
         if (response.ok) {
             const data = await response.json();
-            if (Object.prototype.hasOwnProperty.call(data, "tax_code") && (data.tax_code !== undefined)) {
+            if (data.isEmployee) {
+                setIsEmployee(true);
                 setUser(new EmployeeData(data));
-            } else if (Object.prototype.hasOwnProperty.call(data, "vat_number") && (data.vat_number !== undefined)){
+            } else if (!data.isEmployee) {
+                setIsEmployee(false);
                 setUser(new ClientData(data));
             } else {
                 window.alert("Errore nel caricamento dei dati, ci scusiamo per l'inconveniente. Verrai reindirizzato alla home");
@@ -58,18 +60,7 @@ function Profilo() {
 
     useEffect(() => {
         getUser().then(null);
-    }, [isAuth, userId]);
-
-    useEffect(() => {
-        if (!isAuth && countdown > 0) {
-            const timer = setInterval(() => {
-                setCountdown((prevCountdown) => prevCountdown - 1);
-            }, 1000);
-            return () => clearInterval(timer);
-        } else if (!isAuth && countdown === 0) {
-            nav("/Login");
-        }
-    }, [countdown]);
+    }, [userId]);
 
     const handleOptsError = async (optsError: string) => {
         setOptsError(optsError);
@@ -93,7 +84,6 @@ function Profilo() {
     }
 
     const handleDisconnetti = () => {
-        setIsAuth(false);
         setUserId(-1);
         setUser(null);
         localStorage.removeItem(tokenName);
@@ -189,14 +179,7 @@ function Profilo() {
         await getUser();
     }
 
-    if (!isAuth) {
-        return <div>
-            <div className="w-full mt-5 text-center">
-                <p>Effettua il login</p>
-                <p>Verrai mandato alla pagina di login in {countdown}</p>
-            </div>
-        </div>
-    }
+    if (userId === -1) return <NoUserCountdown/>
 
     return (
         <div>
@@ -207,23 +190,22 @@ function Profilo() {
                         <p className="py-1.5 text-white px-5 w-fit text-lg font-semibold rounded-md bg-blue-500">
                             {user.username}
                         </p>
-                        {user instanceof EmployeeData && (
-                            <div className="mt-1.5 flex flex-wrap gap-y-1 select-none">
-                                <p className="text-lg w-full font-semibold">Posizione: {user.position}</p>
-                                <p className="text-lg w-full font-semibold">Data Assunzione: {user.hiring_date}</p>
-                            </div>
-                        )}
-                        {user instanceof ClientData && (
-                            <div>
-                                {user.company_name &&
-                                    <p className="text-lg w-full font-semibold">Nome Azienda: {user.company_name}</p>}
-                                <p className="text-lg w-full font-semibold">Partita IVA: {user.vat_number}</p>
-                            </div>
-                        )}
+                        {isEmployee && user instanceof EmployeeData && <div className="mt-1.5 flex flex-wrap gap-y-1 select-none">
+                            <p className="text-lg w-full font-semibold">Posizione: {user.position}</p>
+                            <p className="text-lg w-full font-semibold">Data Assunzione: {user.hiring_date}</p>
+                        </div>}
+                        {!isEmployee && user instanceof ClientData && <div className="mt-1.5 flex flex-wrap gap-y-1 select-none">
+                            {user.company_name &&
+                                <p className="text-lg w-full font-semibold">Nome
+                                    Azienda: {user.company_name}</p>}
+                            <p className="text-lg w-full font-semibold">Cliente dal: {user.client_since}</p>
+                            <p className="text-lg w-full font-semibold">Partita IVA: {user.vat_number}</p>
+                        </div>}
                     </div>
-                    <OptionIcon onClick={() => setShowOpts((prevState) => !prevState)}
-                                className="cursor-pointer fill-gray-600 w-7 h-7 absolute top-3 right-3"/>
-                    <div className={"absolute duration-100 select-none flex flex-wrap flex-col top-11 right-3.5 border border-gray-400 rounded " + (!showOpts && "opacity-0")}>
+                            <OptionIcon onClick={() => setShowOpts((prevState) => !prevState)}
+                        className="cursor-pointer fill-gray-600 w-7 h-7 absolute top-3 right-3"/>
+                    <div
+                        className={"absolute duration-100 select-none flex flex-wrap flex-col top-11 right-3.5 border border-gray-400 rounded " + (!showOpts && "opacity-0")}>
                         <button onClick={handleDisconnetti}
                                 className="px-1.5 py-1 rounded-t border-b border-gray-400 hover:bg-gray-200">Disconnetti
                         </button>
