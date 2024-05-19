@@ -12,7 +12,7 @@ if ($id > 0)
         $query = "DELETE FROM users WHERE id = ?";
         $stmt = mysqli_prepare($conn, $query);
         mysqli_stmt_bind_param($stmt, "i", $client_id);
-        $stmt->execute;
+        $stmt->execute();
         $result = $stmt->affected_rows;
         if ($result <= 0) {
             echo "Impossibile eliminare l'utente";
