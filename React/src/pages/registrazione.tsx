@@ -35,6 +35,13 @@ function Registrazione() {
             await handleError("Inserire tutti i valori segnati con l'asterisco");
             return;
         }
+        if (username.length < 6) {
+            await handleError("Il tuo username dev'essere lungo almeno 6 caratteri");
+            return;
+        } else if (password.length < 6) {
+            await handleError("La tua password dev'essere lunga almeno 6 caratteri");
+            return;
+        }
         const req: RequestInit = {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
@@ -57,7 +64,7 @@ function Registrazione() {
                 const req = {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({username: username, password: password}),
+                    body: JSON.stringify({username: username.trim(), password: password.trim()}),
                 };
                 const response = await fetch('http://localhost:8000/login.php', req);
                 if (response.ok) {

@@ -13,7 +13,10 @@ export async function validateLogin(): Promise<number | null> {
         }
         if (Math.floor(Date.now() / 1000) < payload.exp) {
             return payload.id as number;
-        } else return null;
+        } else {
+            localStorage.removeItem(tokenName);
+            return null;
+        }
     } catch (error) {
         console.error('Token verification failed:', error);
         return null;
