@@ -5,21 +5,22 @@ import Login from "./pages/login.tsx";
 import Veicoli from "./pages/veicoli.tsx";
 import Profilo from "./pages/profilo.tsx";
 import Registrazione from "./pages/registrazione.tsx";
+import AggiungiVeicolo from "./pages/aggiungiVeicolo.tsx";
 
 function App() {
-
-    return (
-        <>
-            <Navbar />
-            <Routes>
-                <Route index={true} path="/" element={<Home />} />
-                <Route path="/Veicoli" element={<Veicoli />} />
-                <Route path="/Login" element={<Login />} />
-                <Route path="/Profilo" element={<Profilo />} />
-                <Route path="/Registrazione" element={<Registrazione />} />
-            </Routes>
-        </>
-    );
+  return (
+    <>
+      <Navbar />
+      <Routes>
+        <Route index={true} path="/" element={<Home />} />
+        <Route path="/Veicoli" element={<Veicoli />} />
+        <Route path="/Login" element={<Login />} />
+        <Route path="/Profilo" element={<Profilo />} />
+        <Route path="/Registrazione" element={<Registrazione />} />
+        <Route path="Veicoli/AggiungiVeicolo" element={<AggiungiVeicolo />} />
+      </Routes>
+    </>
+  );
 }
 
 export default App;

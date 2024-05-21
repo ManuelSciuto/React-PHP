@@ -5,6 +5,7 @@ import NoUserCountdown from "../components/noUserCountdown.tsx";
 import ProfiloVeicolo from "../components/profiloVeicolo.tsx";
 import { twMerge } from "tailwind-merge";
 import { sleep } from "../components/sleep.ts";
+import { NavLink } from "react-router-dom";
 
 function Veicoli() {
   const [userId, setUserId] = useState(-1);
@@ -56,7 +57,9 @@ function Veicoli() {
     if (response.ok) {
       const responseData = await response.text();
       if (responseData === "Utente non trovato") {
-        setError("Errore, utente non trovato, ricaricare la pagina, grazie.");
+        await handleError(
+          "Errore, utente non trovato, ricaricare la pagina, grazie.",
+        );
       } else {
         setVehiclesNumber(parseInt(responseData));
       }
@@ -96,9 +99,19 @@ function Veicoli() {
       ) : (
         <div>
           {vehiclesNumber < 5 ? (
-            <p>Hai {vehiclesNumber} mezzi registrati</p>
+            <div className="flex my-2 py-2 px-4 gap-x-2">
+              <p>Hai {vehiclesNumber} mezzi registrati</p>
+              <NavLink
+                to="./AggiungiVeicolo"
+                className="text-blue-500 hover:text-blue-600"
+              >
+                Aggiungi un mezzo
+              </NavLink>
+            </div>
           ) : (
-            <p>Hai 5 mezzi registati, eliminane uno per aggiungerne altri</p>
+            <p className="my-2 py-2 px-4">
+              Hai 5 mezzi registati, eliminane uno per aggiungerne altri
+            </p>
           )}
         </div>
       )}
