@@ -84,7 +84,7 @@ function Veicoli() {
       <div
         className={twMerge(
           "bg-red-600 text-white duration-150 font-semibold text-lg",
-          error !== "" && "h-0 px-2 py-1",
+          error !== "" && "px-2 py-1",
         )}
       >
         {error}
