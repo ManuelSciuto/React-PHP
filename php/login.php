@@ -1,10 +1,13 @@
 <?php
 include 'db.php';
+require_once 'vendor/autoload.php';
+use Firebase\JWT\JWT;
 
 $requestBody = file_get_contents('php://input');
 $data = json_decode($requestBody, true);
 $username = isset($data['username']) ? $data['username'] : '';
 $password = isset($data['password']) ? $data['password'] : '';
+$rememberMe = isset($data["rememberMe"]) ? $data["rememberMe"] : false;
 $response = array();
 
 if (!empty($username) && !empty($password)) {
@@ -17,7 +20,16 @@ if (!empty($username) && !empty($password)) {
     $row = $result->fetch_assoc();
     if (!empty($row)) {
         if (password_verify($password, $row['password'])) {
-            $response['id'] =  $row['id'];
+            $tokenData = [
+                'id' => $row['id'],
+                'username' => $username,
+                'exp' => time() + ($rememberMe ? 604800 : 3600), // Una settimana o Un'ora
+            ];
+
+            $jwtKey = 'ae5734d02c8c3b82e282b08c64a1efad9a0d6d723dd4df6c2c6c723b8fcbe4a6';
+            $alg = 'HS256';
+            $token = JWT::encode($tokenData, $jwtKey, $alg);
+            $response['token'] =  $token;
         } else {
             $response['error'] =  'Password Errata';
         }

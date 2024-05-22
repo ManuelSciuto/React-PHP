@@ -1,24 +1,31 @@
-import {ALG, jwtKey, tokenName} from "../../../config.ts";
-import * as jwt from "jose";
+import { tokenName } from "../../../config.ts";
 
 export async function validateLogin(): Promise<number | null> {
-    const encryptedToken = localStorage.getItem(tokenName);
-    if (!encryptedToken) {
-        return null;
+  const encryptedToken = localStorage.getItem(tokenName);
+  if (!encryptedToken) {
+    return null;
+  }
+  try {
+    const req = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        token: encryptedToken,
+      }),
+    };
+    const response = await fetch(
+      "http://localhost:8000/users/validation.php",
+      req,
+    );
+    const resData = await response.text();
+    if (resData === "false") {
+      localStorage.removeItem(tokenName);
+      return null;
+    } else {
+      return parseInt(resData);
     }
-    try {
-        const { payload } = await jwt.jwtVerify(encryptedToken, jwtKey, { algorithms: [ALG] });
-        if (!payload.exp) {
-            return null;
-        }
-        if (Math.floor(Date.now() / 1000) < payload.exp) {
-            return payload.id as number;
-        } else {
-            localStorage.removeItem(tokenName);
-            return null;
-        }
-    } catch (error) {
-        console.error('Token verification failed:', error);
-        return null;
-    }
+  } catch (error) {
+    console.error("Token verification failed:", error);
+    return null;
+  }
 }
