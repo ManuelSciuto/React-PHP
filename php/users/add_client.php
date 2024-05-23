@@ -1,17 +1,18 @@
 <?php
+global $conn;
 include '../db.php';
 
 $requestBody = file_get_contents('php://input');
 $data = json_decode($requestBody, true);
-$username = isset($data['username']) ? $data['username'] : "";
+$username = $data['username'] ?? "";
 $password = isset($data['password']) ? password_hash($data['password'], PASSWORD_BCRYPT) : "";
-$name = isset($data['name']) ? $data['name'] : "";
-$surname = isset($data['surname']) ? $data['surname'] : "";
-$address = isset($data['address']) ? $data['address'] : "";
-$phone_num = isset($data['phone_num']) ? $data['phone_num'] : "";
-$vat_number = isset($data['vat_number']) ? $data['vat_number'] : "";
-$company_name = isset($data['company_name']) ? $data['company_name'] : null;
-$client_since = isset($data['client_since']) ? $data['client_since'] : "";
+$name = $data['name'] ?? "";
+$surname = $data['surname'] ?? "";
+$address = $data['address'] ?? "";
+$phone_num = $data['phone_num'] ?? "";
+$vat_number = $data['vat_number'] ?? "";
+$company_name = $data['company_name'] ?? null;
+$client_since = $data['client_since'] ?? "";
 
 if (!empty($username) && !empty($password) && !empty($name) && !empty($surname) && !empty($address) && !empty($phone_num) && !empty($vat_number) && !empty($client_since))
 {
@@ -59,4 +60,3 @@ if (!empty($username) && !empty($password) && !empty($name) && !empty($surname) 
 } else {
     echo "Campo obbligatorio mancantw";
 }
-?>

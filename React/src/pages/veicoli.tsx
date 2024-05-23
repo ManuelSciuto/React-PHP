@@ -6,12 +6,14 @@ import ProfiloVeicolo from "../components/profiloVeicolo.tsx";
 import { twMerge } from "tailwind-merge";
 import { sleep } from "../components/sleep.ts";
 import { NavLink } from "react-router-dom";
+import { Veicolo } from "../misc/classes/Veicolo.ts";
 
 function Veicoli() {
   const [userId, setUserId] = useState(-1);
   const [isEmployee, setIsEmployee] = useState<null | boolean>(null);
   const [error, setError] = useState("");
   const [vehiclesNumber, setVehiclesNumber] = useState(0);
+  const [vehicles, setVehicles] = useState<Veicolo[]>([]);
 
   const handleError = async (errorText: string) => {
     setError(errorText);
@@ -44,24 +46,30 @@ function Veicoli() {
     } else setIsEmployee(null);
   }
 
-  async function getClientNumOfVehicles() {
+  async function getClientVehicles() {
     const req = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id: userId }),
     };
     const response = await fetch(
-      "http://localhost:8000/vehicles/get_user_vehicles_number.php",
+      "http://localhost:8000/vehicles/get_client_vehicles.php",
       req,
     );
     if (response.ok) {
-      const responseData = await response.text();
-      if (responseData === "Utente non trovato") {
+      const responseData = await response.json();
+      console.log(responseData);
+      if (Object.prototype.hasOwnProperty.call(responseData, "error")) {
         await handleError(
           "Errore, utente non trovato, ricaricare la pagina, grazie.",
         );
       } else {
-        setVehiclesNumber(parseInt(responseData));
+        setVehiclesNumber(responseData.length);
+        const resArray: Veicolo[] = [];
+        for (const vehicle of responseData) {
+          resArray.push(new Veicolo(vehicle));
+        }
+        setVehicles(resArray);
       }
     }
   }
@@ -73,7 +81,7 @@ function Veicoli() {
   useEffect(() => {
     setEmployeeBool().then(null);
     if (!isEmployee && userId !== -1) {
-      getClientNumOfVehicles().then(null);
+      getClientVehicles().then(null);
     }
   }, [userId]);
 
@@ -113,6 +121,11 @@ function Veicoli() {
               Hai 5 mezzi registati, eliminane uno per aggiungerne altri
             </p>
           )}
+          <div className="w-full flex flex-wrap justify-center gap-y-2">
+            {vehicles.map((veicolo, idx) => (
+              <ProfiloVeicolo veicolo={veicolo} key={idx} />
+            ))}
+          </div>
         </div>
       )}
     </div>

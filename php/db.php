@@ -18,7 +18,3 @@ $dbpass = "";
 $dbname = "react-php";
 
 $conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname, $dbport);
-
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}

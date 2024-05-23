@@ -1,9 +1,10 @@
 <?php
+global $conn;
 include '../db.php';
 
 $requestBody = file_get_contents('php://input');
 $data = json_decode($requestBody, true);
-$id = isset($data['id']) ? $data['id'] : 0;
+$id = $data['id'] ?? 0;
 
 if ($id > 0) {
     /* Provo a prendere il cliente prima */
@@ -41,4 +42,3 @@ if ($id > 0) {
         }
     echo "Errore utente non trovato";
 }
-?>

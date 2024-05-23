@@ -1,19 +1,16 @@
 <?php
+global $conn;
 include '../db.php';
 
-$requestBody = file_get_contents('php://input');
-$data = json_decode($requestBody, true);
-$arrival_date = isset($data['arrival_date']) ? $data['arrival_date'] : null;
-$status = isset($data['status']) ? $data['status'] : null;
-$client_id = isset($data['client_id']) ? $data['client_id'] : 0;
-$model = isset($data['model']) ? $data['model'] : "";
-$tag = isset($data['tag']) ? $data['tag'] : "";
-$brand = isset($data['brand']) ? $data['brand'] : "";
-$reg_date = isset($data['reg_date']) ? $data['reg_date'] : null;
+$arrival_date = $_POST['arrival_date'] ?? null;
+$status = $_POST['status'] ?? null;
+$client_id = $_POST['client_id'] ?? 0;
+$model = $_POST['model'] ?? "a";
+$tag = $_POST['tag'] ?? "a";
+$brand = $_POST['brand'] ?? "a";
+$reg_date = $_POST['reg_date'] ?? "2000-01-01";
 
-
-if ($client_id > 0 && !empty($model) && !empty($tag) && !empty($brand) && !empty($reg_date))
-{
+if ($client_id > 0 && !empty($model) && !empty($tag) && !empty($brand) && !empty($reg_date)) {
     mysqli_begin_transaction($conn);
     try {
         $query = "INSERT INTO vehicles (arrival_date, status, client_id) VALUES (?, ?, ?)";
@@ -42,4 +39,3 @@ if ($client_id > 0 && !empty($model) && !empty($tag) && !empty($brand) && !empty
 } else {
     echo "Errore, impossibile aggiungere il veicolo";
 }
-?>

@@ -1,5 +1,5 @@
 import { validateLogin } from "../components/validation.ts";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import NoUserCountdown from "../components/noUserCountdown.tsx";
 import LeftArrow from "../components/svgs/leftArrow.tsx";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -8,12 +8,8 @@ import { twMerge } from "tailwind-merge";
 import { sleep } from "../components/sleep.ts";
 
 function AggiungiVeicolo() {
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [error, setError] = useState("");
   const [userId, setUserId] = useState(-1);
-  const [files, setFiles] = useState<string[]>([]);
-  const [showFullImage, setShowFullImage] = useState<boolean>(false);
-  const [fullImageShown, setFullImageShown] = useState<string | null>(null);
   const [dataVeicolo, setDataVeicolo] = useState<Veicolo>(new Veicolo(null));
   const nav = useNavigate();
 
@@ -33,18 +29,23 @@ function AggiungiVeicolo() {
   }, []);
 
   const handleSubmit = async () => {
-    setDataVeicolo({ ...dataVeicolo, client_id: userId });
+    const formData = new FormData();
+    formData.append("vehicle_id", dataVeicolo.vehicle_id.toString());
+    formData.append("arrival_date", dataVeicolo.arrival_date);
+    formData.append("status", dataVeicolo.status);
+    formData.append("client_id", userId.toString());
+    formData.append("model", dataVeicolo.model);
+    formData.append("tag", dataVeicolo.tag);
+    formData.append("brand", dataVeicolo.brand);
+    formData.append("reg_date", dataVeicolo.reg_date);
     const req = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(dataVeicolo),
+      body: formData,
     };
     const response = await fetch(
       "http://localhost:8000/vehicles/add_vehicle.php",
       req,
     );
-    console.log(req.body);
-    console.log(response);
     if (response.ok) {
       const responseData = await response.text();
       console.log(responseData);
@@ -72,60 +73,6 @@ function AggiungiVeicolo() {
         <NavLink to="/Veicoli">
           <LeftArrow className={"fill-gray-500 w-8 h-8"} />
         </NavLink>
-      </div>
-      <div className="w-11/12 h-fit flex flex-wrap min-w-[23rem] p-2 rounded-lg mt-5 mx-auto border-2 max-w-4xl">
-        <div className="w-[90px] flex flex-wrap h-20">
-          <p className="w-full font-bold text-xl">FOTO</p>
-          <div className="flex w-[90px] h-12 -mb-3 items-center">
-            <button
-              className="w-full max-w-xs py-2 bg-blue-500 text-white rounded-lg disabled:bg-blue-900 disabled:cursor-not-allowed"
-              disabled={files.length >= 3}
-              onClick={() => fileInputRef.current!.click()}
-            >
-              Scegli file
-            </button>
-            <input
-              type="file"
-              accept=".png, .jpg, .jpeg"
-              ref={fileInputRef}
-              hidden
-              onChange={(e) => {
-                setFiles([...files, URL.createObjectURL(e.target.files![0])]);
-              }}
-            />
-          </div>
-        </div>
-        <div className="w-[calc(100%-90px)] flex gap-x-2 justify-center">
-          {files.map((file, idx) => (
-            <div className="relative" key={idx}>
-              <img
-                className="h-20 w-20 cursor-zoom-in"
-                onClick={() => {
-                  setShowFullImage(true);
-                  setFullImageShown(file);
-                }}
-                src={file}
-                alt={"Img"}
-              />
-              <button
-                onClick={() => {
-                  setFiles(files.slice(0, idx).concat(files.slice(idx + 1)));
-                }}
-                className="bg-gray-600 px-1.5 absolute top-1 right-1 rounded-full z-30"
-              >
-                X
-              </button>
-            </div>
-          ))}
-        </div>
-        {showFullImage && fullImageShown && (
-          <div
-            onClick={() => setShowFullImage(false)}
-            className="absolute cursor-zoom-out z-40 top-0 left-0 w-full h-full bg-[rgba(0,0,0,0.8)] flex justify-center items-center"
-          >
-            <img src={fullImageShown} className="w-3/4 h-3/4" alt="Img" />
-          </div>
-        )}
       </div>
       <div className="w-11/12 h-fit flex flex-wrap min-w-[23rem] p-4 rounded-lg mt-3 mx-auto border-2 max-w-4xl">
         <p className="w-full font-bold text-xl mb-2">DATI VEICOLO</p>

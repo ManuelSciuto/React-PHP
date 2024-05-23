@@ -1,13 +1,14 @@
 <?php
+global $conn;
 include 'db.php';
 require_once 'vendor/autoload.php';
 use Firebase\JWT\JWT;
 
 $requestBody = file_get_contents('php://input');
 $data = json_decode($requestBody, true);
-$username = isset($data['username']) ? $data['username'] : '';
-$password = isset($data['password']) ? $data['password'] : '';
-$rememberMe = isset($data["rememberMe"]) ? $data["rememberMe"] : false;
+$username = $data['username'] ?? '';
+$password = $data['password'] ?? '';
+$rememberMe = $data["rememberMe"] ?? false;
 $response = array();
 
 if (!empty($username) && !empty($password)) {
@@ -44,4 +45,4 @@ if (!empty($username) && !empty($password)) {
 }
 
 echo json_encode($response);
-?>
+
