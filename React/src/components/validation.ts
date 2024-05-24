@@ -1,4 +1,4 @@
-import { tokenName } from "../../../config.ts";
+import { tokenName } from "../config.ts";
 
 export async function validateLogin(): Promise<number | null> {
   const encryptedToken = localStorage.getItem(tokenName);

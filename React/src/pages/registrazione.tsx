@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import LoadingSpinner from "../components/svgs/loadingSpinner.tsx";
-import { tokenName } from "../../../config.ts";
+import { tokenName } from "../config.ts";
 import eventEmitter from "../misc/eventEmitter.tsx";
 import { sleep } from "../components/sleep.ts";
 import { useNavigate } from "react-router-dom";
@@ -117,100 +117,100 @@ function Registrazione() {
         <div className="w-full text-center pb-5 pt-2 bg-blue-500 text-3xl rounded-t-md font-bold text-white">
           BENVENUTO
         </div>
-        <form className="w-full p-3 -mt-3 flex flex-wrap gap-y-1.5 bg-white text-lg rounded-md">
+        <form className="w-full p-3 -mt-3 flex flex-wrap gap-y-1.5 bg-[rgb(30,30,30)] text-lg rounded-md">
           <div className="w-full">
-            <label className="block pl-px mb-0.5 text-sm font-medium text-gray-900">
+            <label className="block pl-px mb-0.5 text-sm font-medium text-white">
               Username <label className="text-red-600">*</label>
             </label>
             <input
               type="text"
               onChange={(e) => setUsername(e.target.value)}
-              className="bg-gray-200 hover:bg-[rgb(219,222,227)] border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
+              className="bg-neutral-300 hover:bg-neutral-400 border border-gray-700 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
               required={true}
             />
           </div>
           <div className="w-full flex flex-wrap">
-            <label className="block w-full pl-px mb-0.5 text-sm font-medium text-gray-900">
-              Password <label className="text-red-600">*</label>
+            <label className="block w-full pl-px mb-0.5 text-sm font-medium text-white">
+              Password
             </label>
             <input
               type={showPassword ? "text" : "password"}
               onChange={(e) => setPassword(e.target.value)}
-              className="bg-gray-200 w-[85%] hover:bg-[rgb(219,222,227)] border border-gray-300 text-gray-900 rounded-l-lg focus:ring-primary-600 focus:border-primary-600 block p-2"
+              className="w-[85%] bg-neutral-300 hover:bg-neutral-400 border border-gray-700 text-black rounded-l-lg focus:ring-primary-600 focus:border-primary-600 block p-2"
               required={true}
             />
             <button
               type="button"
               onClick={() => setShowPassword((prevState) => !prevState)}
-              className="w-[15%] bg-gray-200 hover:bg-[rgb(219,222,227)] border border-l-0 rounded-r-lg border-gray-300 text-gray-900"
+              className="w-[15%] bg-neutral-300 hover:bg-neutral-400 border border-gray-700 border-l-0 rounded-r-lg text-gray-900"
             >
               {showPassword ? "Hide" : "Show"}
             </button>
           </div>
           <div className="border border-gray-300 w-full mt-2.5 mb-1.5"></div>
           <div className="w-full">
-            <label className="block pl-px mb-0.5 text-sm font-medium text-gray-900">
+            <label className="block pl-px mb-0.5 text-sm font-medium text-white">
               Nome <label className="text-red-600">*</label>
             </label>
             <input
               type="text"
               onChange={(e) => setName(e.target.value)}
-              className="bg-gray-200 hover:bg-[rgb(219,222,227)] border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
+              className="bg-neutral-300 hover:bg-neutral-400 border border-gray-700 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
               required={true}
             />
           </div>
           <div className="w-full">
-            <label className="block pl-px mb-0.5 text-sm font-medium text-gray-900">
+            <label className="block pl-px mb-0.5 text-sm font-medium text-white">
               Cognome <label className="text-red-600">*</label>
             </label>
             <input
               type="text"
               onChange={(e) => setSurname(e.target.value)}
-              className="bg-gray-200 hover:bg-[rgb(219,222,227)] border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
+              className="bg-neutral-300 hover:bg-neutral-400 border border-gray-700 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
               required={true}
             />
           </div>
           <div className="w-full">
-            <label className="block pl-px mb-0.5 text-sm font-medium text-gray-900">
+            <label className="block pl-px mb-0.5 text-sm font-medium text-white">
               Indirizzo <label className="text-red-600">*</label>
             </label>
             <input
               type="text"
               onChange={(e) => setAddress(e.target.value)}
-              className="bg-gray-200 hover:bg-[rgb(219,222,227)] border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
+              className="bg-neutral-300 hover:bg-neutral-400 border border-gray-700 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
               required={true}
             />
           </div>
           <div className="w-full">
-            <label className="block pl-px mb-0.5 text-sm font-medium text-gray-900">
+            <label className="block pl-px mb-0.5 text-sm font-medium text-white">
               Numero di telefono <label className="text-red-600">*</label>
             </label>
             <input
               type="text"
               onChange={(e) => setPhoneNum(e.target.value)}
-              className="bg-gray-200 hover:bg-[rgb(219,222,227)] border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
+              className="bg-neutral-300 hover:bg-neutral-400 border border-gray-700 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
               required={true}
             />
           </div>
           <div className="w-full">
-            <label className="block pl-px mb-0.5 text-sm font-medium text-gray-900">
+            <label className="block pl-px mb-0.5 text-sm font-medium text-white">
               Partita IVA <label className="text-red-600">*</label>
             </label>
             <input
               type="text"
               onChange={(e) => setVatNumber(e.target.value)}
-              className="bg-gray-200 hover:bg-[rgb(219,222,227)] border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
+              className="bg-neutral-300 hover:bg-neutral-400 border border-gray-700 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
               required={true}
             />
           </div>
           <div className="w-full">
-            <label className="block pl-px mb-0.5 text-sm font-medium text-gray-900">
+            <label className="block pl-px mb-0.5 text-sm font-medium text-white">
               Nome azienda
             </label>
             <input
               type="text"
               onChange={(e) => setCompanyName(e.target.value)}
-              className="bg-gray-200 hover:bg-[rgb(219,222,227)] border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
+              className="bg-neutral-300 hover:bg-neutral-400 border border-gray-700 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
               required={true}
             />
           </div>

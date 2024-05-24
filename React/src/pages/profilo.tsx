@@ -3,7 +3,7 @@ import { validateLogin } from "../components/validation.ts";
 import { useNavigate } from "react-router-dom";
 import { ClientData } from "../misc/classes/ClientData.ts";
 import { EmployeeData } from "../misc/classes/EmployeeData.ts";
-import { tokenName } from "../../../config.ts";
+import { tokenName } from "../config.ts";
 import eventEmitter from "../misc/eventEmitter.tsx";
 import { sleep } from "../components/sleep.ts";
 import OptionIcon from "../components/svgs/optionIcon.tsx";
@@ -221,7 +221,7 @@ function Profilo() {
               </div>
             )}
             {!isEmployee && user instanceof ClientData && (
-              <div className="mt-1.5 flex flex-wrap gap-y-1 select-none">
+              <div className="mt-1.5 text-white flex flex-wrap gap-y-1 select-none">
                 {user.company_name && (
                   <p className="text-lg w-full font-semibold">
                     Nome Azienda: {user.company_name}
@@ -242,20 +242,20 @@ function Profilo() {
           />
           <div
             className={
-              "absolute duration-100 select-none flex flex-wrap flex-col top-11 right-3.5 border border-gray-400 rounded " +
+              "absolute duration-100 text-white select-none flex flex-wrap flex-col top-11 right-3.5 border border-gray-400 rounded " +
               (!showOpts && "opacity-0")
             }
           >
             <button
               onClick={handleDisconnetti}
-              className="px-1.5 py-1 rounded-t border-b border-gray-400 hover:bg-gray-200"
+              className="px-1.5 py-1 rounded-t border-b border-gray-400 hover:bg-neutral-800"
             >
               Disconnetti
             </button>
             <button
               onClick={handleDelete}
               className={
-                "px-1.5 flex justify-center rounded-b hover:bg-gray-200 " +
+                "px-1.5 flex justify-center rounded-b  hover:bg-neutral-800 " +
                 (isDeleting ? "py-1.5" : "py-1")
               }
               disabled={isDeleting}
@@ -272,34 +272,34 @@ function Profilo() {
       )}
       {user && (
         <div className="w-3/4 select-none min-w-[26rem] max-w-[50rem] relative flex flex-wrap justify-between p-4 pt-2  border-2 mx-auto my-5 gap-y-3 rounded-lg">
-          <p className="w-full text-lg font-bold">INFO</p>
+          <p className="w-full text-lg font-bold text-white">INFO</p>
           <form className="w-full flex flex-wrap gap-y-3 md:justify-between">
             <div className="w-full md:w-[calc(50%-6px)]">
-              <label className="block pl-px mb-0.5 text-sm font-medium text-gray-900">
+              <label className="block pl-px mb-0.5 text-sm font-medium text-white">
                 Nome<label className="text-red-600">*</label>
               </label>
               <input
                 type="text"
                 value={user.name}
                 onChange={(e) => setUser({ ...user, name: e.target.value })}
-                className="bg-gray-200 hover:bg-[rgb(219,222,227)] border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
+                className="bg-neutral-300 hover:bg-neutral-400 border border-neutral-600 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
                 required={true}
               />
             </div>
             <div className="w-full md:w-[calc(50%-6px)]">
-              <label className="block pl-px mb-0.5 text-sm font-medium text-gray-900">
+              <label className="block pl-px mb-0.5 text-sm font-medium text-white">
                 Cognome<label className="text-red-600">*</label>
               </label>
               <input
                 type="text"
                 value={user.surname}
                 onChange={(e) => setUser({ ...user, surname: e.target.value })}
-                className="bg-gray-200 hover:bg-[rgb(219,222,227)] border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
+                className="bg-neutral-300 hover:bg-neutral-400 border border-neutral-600 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
                 required={true}
               />
             </div>
             <div className="w-full md:w-[calc(50%-6px)]">
-              <label className="block pl-px mb-0.5 text-sm font-medium text-gray-900">
+              <label className="block pl-px mb-0.5 text-sm font-medium text-white">
                 Numero di telefono<label className="text-red-600">*</label>
               </label>
               <input
@@ -308,26 +308,26 @@ function Profilo() {
                 onChange={(e) =>
                   setUser({ ...user, phone_num: e.target.value })
                 }
-                className="bg-gray-200 hover:bg-[rgb(219,222,227)] border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
+                className="bg-neutral-300 hover:bg-neutral-400 border border-neutral-600 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
                 required={true}
               />
             </div>
             <div className="w-full md:w-[calc(50%-6px)]">
-              <label className="block pl-px mb-0.5 text-sm font-medium text-gray-900">
+              <label className="block pl-px mb-0.5 text-sm font-medium text-white">
                 Indirizzo<label className="text-red-600">*</label>
               </label>
               <input
                 type="text"
                 value={user.address}
                 onChange={(e) => setUser({ ...user, address: e.target.value })}
-                className="bg-gray-200 hover:bg-[rgb(219,222,227)] border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
+                className="bg-neutral-300 hover:bg-neutral-400 border border-neutral-600 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
                 required={true}
               />
             </div>
             <button
               onClick={handleDataUpdate}
               className={
-                "bg-blue-500 hover:bg-blue-600 px-3 rounded-md " +
+                "bg-blue-500 hover:bg-blue-600 px-3 rounded-md text-white " +
                 (isUpdatingData ? "py-2.5" : "py-2")
               }
               disabled={isUpdatingData}
@@ -348,36 +348,36 @@ function Profilo() {
       )}
       {user && (
         <div className="w-3/4 select-none min-w-[26rem] max-w-[50rem] relative flex flex-wrap justify-between p-4 pt-2  border-2 mx-auto my-5 gap-y-3 rounded-lg">
-          <p className="w-full text-lg font-bold">PASSWORD</p>
+          <p className="w-full text-lg font-bold text-white">PASSWORD</p>
           <form className="w-full flex flex-wrap gap-y-3 md:justify-between">
             <div className="w-full md:w-[calc(50%-6px)]">
-              <label className="block pl-px mb-0.5 text-sm font-medium text-gray-900">
+              <label className="block pl-px mb-0.5 text-sm font-medium text-white">
                 Current Password<label className="text-red-600">*</label>
               </label>
               <input
                 type="password"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
-                className="bg-gray-200 hover:bg-[rgb(219,222,227)] border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
+                className="bg-neutral-300 hover:bg-neutral-400 border border-neutral-600 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
                 required={true}
               />
             </div>
             <div className="w-full md:w-[calc(50%-6px)]">
-              <label className="block pl-px mb-0.5 text-sm font-medium text-gray-900">
+              <label className="block pl-px mb-0.5 text-sm font-medium text-white">
                 New Password<label className="text-red-600">*</label>
               </label>
               <input
                 type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="bg-gray-200 hover:bg-[rgb(219,222,227)] border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
+                className="bg-neutral-300 hover:bg-neutral-400 border border-neutral-600 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
                 required={true}
               />
             </div>
             <button
               onClick={handlePasswordUpdate}
               className={
-                "bg-blue-500 hover:bg-blue-600 px-3 rounded-md " +
+                "bg-blue-500 hover:bg-blue-600 px-3 rounded-md text-white " +
                 (isUpdatingData ? "py-2.5" : "py-2")
               }
               disabled={isUpdatingData}

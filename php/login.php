@@ -17,7 +17,6 @@ if (!empty($username) && !empty($password)) {
     mysqli_stmt_bind_param($stmt, "s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
-
     $row = $result->fetch_assoc();
     if (!empty($row)) {
         if (password_verify($password, $row['password'])) {

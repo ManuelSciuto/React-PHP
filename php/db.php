@@ -9,11 +9,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit(0);
 }
 
-// PER DOCKER $dbhost = "db";
+// PER DOCKER $dbhost = "db", PER LOCAL DEV $dbhost = "localhost";
 $dbhost = "localhost";
 $dbport = "3306";
 $dbuser = "root";
-// PER DOCKER $dbpass = "password";
+// PER DOCKER $dbpass = "password", PER LOCAL DEV $dbpass = "";
 $dbpass = "";
 $dbname = "react-php";
 
