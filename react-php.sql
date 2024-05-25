@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mag 24, 2024 alle 14:48
+-- Creato il: Mag 25, 2024 alle 16:44
 -- Versione del server: 10.4.32-MariaDB
 -- Versione PHP: 8.2.12
 
@@ -87,6 +87,26 @@ INSERT INTO `employees` (`employee_id`, `monthly_salary`, `tax_code`, `position`
 -- --------------------------------------------------------
 
 --
+-- Struttura della tabella `jobs`
+--
+
+CREATE TABLE `jobs` (
+  `job_id` int(11) NOT NULL,
+  `vehicle_id` int(11) NOT NULL,
+  `mech_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `jobs`
+--
+
+INSERT INTO `jobs` (`job_id`, `vehicle_id`, `mech_id`) VALUES
+(6, 1, 1),
+(7, 8, 1);
+
+-- --------------------------------------------------------
+
+--
 -- Struttura della tabella `users`
 --
 
@@ -122,7 +142,8 @@ CREATE TABLE `vehicles` (
 --
 
 INSERT INTO `vehicles` (`vehicle_id`, `arrival_date`, `status`, `client_id`) VALUES
-(1, '0000-00-00', 'Lorem Ipsum è un testo segnaposto utilizzato nel settore della tipografia e della stampa. Lorem Ipsum è considerato il testo segnaposto standard sin dal sedicesimo secolo, quando un anonimo tipografo prese una cassetta di caratteri e li assemblò per preparare un testo campione. È sopravvissuto non solo a più di cinque secoli, ma anche al passaggio alla videoimpaginazione, pervenendoci sostanzialmente inalterato. Fu reso popolare, negli anni ’60, con la diffusione dei fogli di caratteri trasferibili “Letraset”, che contenevano passaggi del Lorem Ipsum, e più recentemente da software di impaginazione come Aldus PageMaker, che includeva versioni del Lorem Ipsum.', 6);
+(1, '2024-05-09', 'Lorem Ipsum è un testo segnaposto utilizzato nel settore della tipografia e della stampa. Lorem Ipsum è considerato il testo segnaposto standard sin dal sedicesimo secolo, quando un anonimo tipografo prese una cassetta di caratteri e li assemblò per preparare un testo campione. È sopravvissuto non solo a più di cinque secoli, ma anche al passaggio alla videoimpaginazione, pervenendoci sostanzialmente inalterato. Fu reso popolare, negli anni ’60, con la diffusione dei fogli di caratteri trasferibili “Letraset”, che contenevano passaggi del Lorem Ipsum, e più recentemente da software di impaginazione come Aldus PageMaker, che includeva versioni del Lorem Ipsum.', 6),
+(8, '2024-05-17', '', 6);
 
 -- --------------------------------------------------------
 
@@ -143,7 +164,8 @@ CREATE TABLE `vehicle_data` (
 --
 
 INSERT INTO `vehicle_data` (`vehicle_id`, `model`, `tag`, `brand`, `reg_date`) VALUES
-(1, 'Cb 125 F', 'AA111AA', 'Honda', '2024-04-29');
+(1, 'Cb 125 F', 'AA111AA', 'Honda', '2024-04-29'),
+(8, 'Mt-09', 'aa111aa', 'Yamaha', '2024-05-09');
 
 --
 -- Indici per le tabelle scaricate
@@ -166,6 +188,12 @@ ALTER TABLE `data`
 --
 ALTER TABLE `employees`
   ADD PRIMARY KEY (`employee_id`);
+
+--
+-- Indici per le tabelle `jobs`
+--
+ALTER TABLE `jobs`
+  ADD PRIMARY KEY (`job_id`);
 
 --
 -- Indici per le tabelle `users`
@@ -196,6 +224,12 @@ ALTER TABLE `data`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT per la tabella `jobs`
+--
+ALTER TABLE `jobs`
+  MODIFY `job_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT per la tabella `users`
 --
 ALTER TABLE `users`
@@ -205,13 +239,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT per la tabella `vehicles`
 --
 ALTER TABLE `vehicles`
-  MODIFY `vehicle_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `vehicle_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT per la tabella `vehicle_data`
 --
 ALTER TABLE `vehicle_data`
-  MODIFY `vehicle_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `vehicle_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
