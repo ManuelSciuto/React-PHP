@@ -4,14 +4,17 @@ import { Dispatch, SetStateAction } from "react";
 import Pencil from "./svgs/pencil.tsx";
 import Expand from "./svgs/expand.tsx";
 import IconX from "./svgs/iconX.tsx";
+import PlusIcon from "./svgs/plusIcon.tsx";
 
 interface Props {
   veicolo: Veicolo;
   className?: string;
   handleError: (errorText: string) => Promise<void>;
-  reTrigger: Dispatch<SetStateAction<boolean>>;
-  setExpandVeicolo: Dispatch<SetStateAction<Veicolo | null>>;
-  setEditVeicolo: Dispatch<SetStateAction<boolean>>;
+  reTrigger?: Dispatch<SetStateAction<boolean>>;
+  setExpandVeicolo?: Dispatch<SetStateAction<Veicolo | null>>;
+  setEditVeicolo?: Dispatch<SetStateAction<boolean>>;
+  isEmployee: boolean;
+  handleAddJob?: (vehicle_id: number) => Promise<void>;
 }
 
 function ProfiloVeicolo({
@@ -21,6 +24,8 @@ function ProfiloVeicolo({
   veicolo,
   setExpandVeicolo,
   setEditVeicolo,
+  isEmployee,
+  handleAddJob,
 }: Props) {
   const handleDelete = async (idVeicolo: number) => {
     if (!window.confirm("Sei sicuro di voler eliminare questo veicolo?")) {
@@ -38,7 +43,7 @@ function ProfiloVeicolo({
     if (response.ok) {
       const resText = await response.text();
       if (resText === "Veicolo eliminato con successo") {
-        reTrigger((prev) => !prev);
+        reTrigger && reTrigger((prev) => !prev);
       } else {
         await handleError(resText);
       }
@@ -56,29 +61,38 @@ function ProfiloVeicolo({
         "w-full relative md:w-[calc(50%-4px)] flex flex-wrap justify-between p-4 border-2 rounded-lg overflow-hidden",
       )}
     >
-      <div className="absolute top-0 right-0 w-8 border-l border-transparent">
+      {isEmployee ? (
         <button
-          onClick={() => handleDelete(veicolo.vehicle_id)}
-          className="w-full bg-red-600 hover:bg-red-700 h-8 flex justify-center items-center"
+          onClick={() => handleAddJob && handleAddJob(veicolo.vehicle_id)}
+          className="absolute top-3 right-3"
         >
-          <IconX className="w-5 h-5" />
+          <PlusIcon className="h-12 w-12" />
         </button>
-        <button
-          onClick={() => setExpandVeicolo(veicolo)}
-          className="w-full bg-green-500 hover:bg-green-600 h-8 flex justify-center items-center"
-        >
-          <Expand className="w-6 h-6" />
-        </button>
-        <button
-          onClick={() => {
-            setEditVeicolo(true);
-            setExpandVeicolo(veicolo);
-          }}
-          className="w-full bg-yellow-400 hover:bg-yellow-500 h-8 flex justify-center items-center rounded-bl-md"
-        >
-          <Pencil className="h-6 w-6" />
-        </button>
-      </div>
+      ) : (
+        <div className="absolute top-0 right-0 w-8 border-l border-transparent">
+          <button
+            onClick={() => handleDelete(veicolo.vehicle_id)}
+            className="w-full bg-red-600 hover:bg-red-700 h-8 flex justify-center items-center"
+          >
+            <IconX className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => setExpandVeicolo && setExpandVeicolo(veicolo)}
+            className="w-full bg-green-500 hover:bg-green-600 h-8 flex justify-center items-center"
+          >
+            <Expand className="w-6 h-6" />
+          </button>
+          <button
+            onClick={() => {
+              setEditVeicolo && setEditVeicolo(true);
+              setExpandVeicolo && setExpandVeicolo(veicolo);
+            }}
+            className="w-full bg-yellow-400 hover:bg-yellow-500 h-8 flex justify-center items-center rounded-bl-md"
+          >
+            <Pencil className="h-6 w-6" />
+          </button>
+        </div>
+      )}
       <p className="py-1.5 text-white px-5 w-fit text-lg font-semibold rounded-md bg-blue-500">
         {[veicolo.brand, veicolo.model, veicolo.reg_date.split("-")[0]].join(
           " ",
@@ -97,7 +111,7 @@ function ProfiloVeicolo({
       </div>
       <div className="w-full mt-1.5 flex flex-wrap">
         <p className="text-lg w-full font-semibold">Status</p>
-        <div className="w-full border p-1 rounded-md line-clamp-3">
+        <div className="w-full border p-1 min-h-[82px] rounded-md line-clamp-3">
           {veicolo.status === ""
             ? "Nessuno status presente per questo veicolo"
             : veicolo.status}

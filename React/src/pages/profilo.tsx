@@ -205,7 +205,7 @@ function Profilo() {
   return (
     <div className="pb-4">
       {user && (
-        <div className="w-3/4 min-w-[26rem] max-w-[50rem] relative flex flex-wrap justify-between p-4 border-2 mx-auto my-5 rounded-lg">
+        <div className="w-3/4 text-white min-w-[26rem] max-w-[50rem] relative flex flex-wrap justify-between p-4 border-2 mx-auto my-5 rounded-lg">
           <div>
             <p className="py-1.5 text-white px-5 w-fit text-lg font-semibold rounded-md bg-blue-500">
               {user.username}

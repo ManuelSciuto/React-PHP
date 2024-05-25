@@ -6,6 +6,7 @@ import Veicoli from "./pages/veicoli.tsx";
 import Profilo from "./pages/profilo.tsx";
 import Registrazione from "./pages/registrazione.tsx";
 import AggiungiVeicolo from "./pages/aggiungiVeicolo.tsx";
+import AggiungiJob from "./pages/aggiungiJob.tsx";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/Profilo" element={<Profilo />} />
         <Route path="/Registrazione" element={<Registrazione />} />
         <Route path="Veicoli/AggiungiVeicolo" element={<AggiungiVeicolo />} />
+        <Route path="Veicoli/AggiungiJob" element={<AggiungiJob />} />
       </Routes>
     </>
   );
