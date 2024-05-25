@@ -69,7 +69,7 @@ function ClientVehiclePage({ userId, handleError, closeWindow }: Props) {
     <>
       <div>
         {vehiclesNumber < 5 ? (
-          <div className="flex my-2 py-2 px-4 gap-x-2">
+          <div className="flex my-2 py-2 px-4 gap-x-2 items-center">
             {vehiclesNumber === 1 ? (
               <p>Hai {vehiclesNumber} mezzo registrato</p>
             ) : (
@@ -77,7 +77,7 @@ function ClientVehiclePage({ userId, handleError, closeWindow }: Props) {
             )}
             <NavLink
               to="./AggiungiVeicolo"
-              className="text-blue-500 hover:text-blue-600"
+              className="text-white bg-blue-500 hover:bg-blue-600 py-2 px-3 rounded-lg"
             >
               Aggiungi un mezzo
             </NavLink>
@@ -96,7 +96,6 @@ function ClientVehiclePage({ userId, handleError, closeWindow }: Props) {
               setExpandVeicolo={setExpandedVehicle}
               setEditVeicolo={setEditVehicle}
               key={idx}
-              isEmployee={false}
             />
           ))}
         </div>

@@ -5,6 +5,7 @@ import Pencil from "./svgs/pencil.tsx";
 import Expand from "./svgs/expand.tsx";
 import IconX from "./svgs/iconX.tsx";
 import PlusIcon from "./svgs/plusIcon.tsx";
+import MinusIcon from "./svgs/minusIcon.tsx";
 
 interface Props {
   veicolo: Veicolo;
@@ -13,8 +14,8 @@ interface Props {
   reTrigger?: Dispatch<SetStateAction<boolean>>;
   setExpandVeicolo?: Dispatch<SetStateAction<Veicolo | null>>;
   setEditVeicolo?: Dispatch<SetStateAction<boolean>>;
-  isEmployee: boolean;
   handleAddJob?: (vehicle_id: number) => Promise<void>;
+  handleRemoveJob?: (vehicle_id: number) => Promise<void>;
 }
 
 function ProfiloVeicolo({
@@ -24,8 +25,8 @@ function ProfiloVeicolo({
   veicolo,
   setExpandVeicolo,
   setEditVeicolo,
-  isEmployee,
   handleAddJob,
+  handleRemoveJob,
 }: Props) {
   const handleDelete = async (idVeicolo: number) => {
     if (!window.confirm("Sei sicuro di voler eliminare questo veicolo?")) {
@@ -61,14 +62,23 @@ function ProfiloVeicolo({
         "w-full relative md:w-[calc(50%-4px)] flex flex-wrap justify-between p-4 border-2 rounded-lg overflow-hidden",
       )}
     >
-      {isEmployee ? (
+      {handleAddJob && (
         <button
-          onClick={() => handleAddJob && handleAddJob(veicolo.vehicle_id)}
+          onClick={() => handleAddJob(veicolo.vehicle_id)}
           className="absolute top-3 right-3"
         >
           <PlusIcon className="h-12 w-12" />
         </button>
-      ) : (
+      )}
+      {handleRemoveJob && (
+        <button
+          onClick={() => handleRemoveJob(veicolo.vehicle_id)}
+          className="absolute top-3 right-12"
+        >
+          <MinusIcon className="h-12 w-12 fill-red-600" />
+        </button>
+      )}
+      {setExpandVeicolo && setEditVeicolo && (
         <div className="absolute top-0 right-0 w-8 border-l border-transparent">
           <button
             onClick={() => handleDelete(veicolo.vehicle_id)}
@@ -77,15 +87,15 @@ function ProfiloVeicolo({
             <IconX className="w-5 h-5" />
           </button>
           <button
-            onClick={() => setExpandVeicolo && setExpandVeicolo(veicolo)}
+            onClick={() => setExpandVeicolo(veicolo)}
             className="w-full bg-green-500 hover:bg-green-600 h-8 flex justify-center items-center"
           >
             <Expand className="w-6 h-6" />
           </button>
           <button
             onClick={() => {
-              setEditVeicolo && setEditVeicolo(true);
-              setExpandVeicolo && setExpandVeicolo(veicolo);
+              setEditVeicolo(true);
+              setExpandVeicolo(veicolo);
             }}
             className="w-full bg-yellow-400 hover:bg-yellow-500 h-8 flex justify-center items-center rounded-bl-md"
           >
@@ -102,7 +112,7 @@ function ProfiloVeicolo({
         <p className="text-lg w-full font-semibold">Targa: {veicolo.tag}</p>
         {veicolo.arrival_date !== "0000-00-00" && (
           <p className="text-lg w-full font-semibold">
-            Arrivato il: {veicolo.arrival_date}
+            Data ingresso: {veicolo.arrival_date}
           </p>
         )}
         <p className="text-lg w-full font-semibold">

@@ -46,6 +46,33 @@ function EmployeeVehiclePage({ userId, handleError }: Props) {
     } else await handleError("Impossibile ottenere i veicoli richiesti");
   };
 
+  const handleRemoveJob = async (vehicle_id: number) => {
+    const check = window.confirm(
+      "Vuoi rimuovere questo veicolo da quelli su cui stai lavorando?",
+    );
+    if (!check) return;
+    const req = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        mech_id: userId,
+        vehicle_id: vehicle_id,
+      }),
+    };
+    const response = await fetch(
+      "http://localhost:8000/vehicles/remove_job.php",
+      req,
+    );
+    if (response.ok) {
+      const responseData = await response.text();
+      if (responseData === "Veicolo eliminato con successo") {
+        setReTrigger((e) => !e);
+      } else {
+        await handleError(responseData);
+      }
+    } else await handleError("Impossibile eliminare il veicolo");
+  };
+
   useEffect(() => {
     getEmployeevehicles().then(null);
   }, []);
@@ -80,7 +107,7 @@ function EmployeeVehiclePage({ userId, handleError }: Props) {
               handleError={handleError}
               setExpandVeicolo={setExpandedVehicle}
               setEditVeicolo={setEditVehicle}
-              isEmployee={false}
+              handleRemoveJob={handleRemoveJob}
             />
           ))
         ) : (

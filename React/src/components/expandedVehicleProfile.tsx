@@ -20,7 +20,7 @@ function ExpandedVehicleProfile({ expandedVehicle }: Props) {
         </p>
         {expandedVehicle.arrival_date !== "0000-00-00" && (
           <p className="text-lg w-full font-semibold">
-            Arrivato il: {expandedVehicle.arrival_date}
+            Data ingresso: {expandedVehicle.arrival_date}
           </p>
         )}
         <p className="text-lg w-full font-semibold">

@@ -1,4 +1,3 @@
-import Logo3 from "../components/svgs/logo3.tsx";
 import { validateLogin } from "../components/validation.ts";
 import { useEffect, useState } from "react";
 import NoUserCountdown from "../components/noUserCountdown.tsx";

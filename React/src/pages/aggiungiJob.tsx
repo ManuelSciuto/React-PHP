@@ -35,7 +35,7 @@ function AggiungiJob() {
     const req = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...filtri }),
+      body: JSON.stringify({ ...filtri, mech_id: userId }),
     };
     const response = await fetch(
       "http://localhost:8000/vehicles/search_vehicles.php",
@@ -153,7 +153,6 @@ function AggiungiJob() {
               key={idx}
               veicolo={vehicle}
               handleError={handleError}
-              isEmployee={true}
               handleAddJob={handleAddJob}
             />
           ))

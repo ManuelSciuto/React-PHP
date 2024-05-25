@@ -27,6 +27,15 @@ if ($vehicle_id > 0) {
             echo "Impossibile eliminare il veicolo";
             throw new Exception("Impossibile eliminare il veicolo");
         }
+        $query = "DELETE FROM jobs WHERE vehicle_id = ?";
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, "i", $vehicle_id);
+        $stmt->execute();
+        $result = $stmt->affected_rows;
+        if ($result <= 0) {
+            echo "Impossibile eliminare il veicolo";
+            throw new Exception("Impossibile eliminare il veicolo");
+        }
         mysqli_commit($conn);
         echo "Veicolo eliminato con successo";
     } catch (Exception $e) {
