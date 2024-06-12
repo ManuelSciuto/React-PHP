@@ -29,18 +29,16 @@ services:
       - db
 
   frontend:
-    image: node:alpine
+    image: nginx:alpine
     container_name: frontend
-    entrypoint: /bin/sh
     build:
       context: .
       dockerfile: DockerfileReact
+    restart: always
     ports:
-      - 5173:5173
-    working_dir: /srv/app
-    volumes:
-      - "./React:/srv/app"
-    tty: true
+      - 5173:80
+    networks:
+      - sqlnetwork
 
   db:
     image: mysql:latest

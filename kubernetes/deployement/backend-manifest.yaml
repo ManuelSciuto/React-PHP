@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-1
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: backend-1
+  template:
+    metadata:
+      labels:
+        app: backend-1
+    spec:
+      containers:
+        - name: backend-1
+          image: manuel393/backend-1:latest
+          ports:
+            - containerPort: 80
+          env:
+            - name: MYSQL_DBHOST
+              value: "mysql"
+            - name: MYSQL_DBPORT
+              value: "3306"
+            - name: MYSQL_DBUSER
+              value: "root"
+            - name: MYSQL_DBPASS
+              value: ""
+            - name: MYSQL_DBNAME
+              value: "react-php"

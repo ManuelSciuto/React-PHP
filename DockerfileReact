@@ -1,6 +1,19 @@
-FROM node:alpine
-WORKDIR /app
-COPY React/package*.json ./
+#https://github.com/letnull19A/nginx_vite_react_docker/blob/main/Dockerfile
+FROM node as vite-app
+
+WORKDIR /app/React
+COPY ./React .
+
 RUN npm install
-EXPOSE 5173
-CMD npm run dev
+RUN npm run build
+
+FROM nginx:latest
+
+WORKDIR /usr/share/nginx/
+
+RUN rm -rf html
+RUN mkdir html
+
+COPY --from=vite-app /app/React/dist /usr/share/nginx/html
+
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

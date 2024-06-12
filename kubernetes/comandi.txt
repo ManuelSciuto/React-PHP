@@ -1,0 +1,2 @@
+kubectl apply -f deployement/
+kubectl apply -f service/
