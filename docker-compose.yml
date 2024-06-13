@@ -19,7 +19,8 @@ services:
       - MYSQL_DBHOST=db
       - MYSQL_DBPORT=3306
       - MYSQL_DBUSER=root
-      - MYSQL_DBPASS=
+      - MYSQL_DBPASS=password
+      - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DBNAME=react-php
     ports:
       - 8000:80
