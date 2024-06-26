@@ -39,17 +39,10 @@ spec:
               value: root
             - name: MYSQL_ROOT_PASSWORD
               value: password
-          image: php:8.2-apache
+          image: manuel393/react-backend:latest
           name: backend
           ports:
             - containerPort: 80
           resources: {}
-          volumeMounts:
-            - mountPath: /var/www/html
-              name: backend-claim0
       restartPolicy: Always
-      volumes:
-        - name: backend-claim0
-          persistentVolumeClaim:
-            claimName: backend-claim0
 status: {}

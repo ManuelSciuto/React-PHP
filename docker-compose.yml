@@ -13,8 +13,6 @@ services:
     build:
       context: .
       dockerfile: DockerfilePHP
-    volumes:
-      - "./php:/var/www/html"
     environment:
       - MYSQL_DBHOST=db
       - MYSQL_DBPORT=3306

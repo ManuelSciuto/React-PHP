@@ -4,6 +4,8 @@ minikube start (se non funziona fai minikube delete e minikube start)
 
 modifica il fronend-deployement manifest (image... -> image: manuel393/react-frontend:latest)
 
+modifica il backend-deployement manifest (image... -> image: manuel393/react-backend:latest)
+
 modifica il numero di repliche
 
 kubectl apply -f kind\

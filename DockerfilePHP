@@ -1,3 +1,7 @@
 FROM php:8.2-apache
-#install mysqli extensions
-RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli && apachectl restart
+
+RUN docker-php-ext-install mysqli && docker-php-ext-enable mysqli
+
+COPY ./php /var/www/html
+
+RUN apachectl restart
