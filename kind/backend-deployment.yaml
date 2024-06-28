@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose convert
+    kompose.cmd: kompose convert -f docker-compose.yml -o kind/
     kompose.version: 1.26.0 (40646f47)
   creationTimestamp: null
   labels:
@@ -13,12 +13,11 @@ spec:
   selector:
     matchLabels:
       io.kompose.service: backend
-  strategy:
-    type: Recreate
+  strategy: {}
   template:
     metadata:
       annotations:
-        kompose.cmd: kompose convert
+        kompose.cmd: kompose convert -f docker-compose.yml -o kind/
         kompose.version: 1.26.0 (40646f47)
       creationTimestamp: null
       labels:
@@ -26,20 +25,7 @@ spec:
         io.kompose.service: backend
     spec:
       containers:
-        - env:
-            - name: MYSQL_DBHOST
-              value: db
-            - name: MYSQL_DBNAME
-              value: react-php
-            - name: MYSQL_DBPASS
-              value: password
-            - name: MYSQL_DBPORT
-              value: "3306"
-            - name: MYSQL_DBUSER
-              value: root
-            - name: MYSQL_ROOT_PASSWORD
-              value: password
-          image: manuel393/react-backend:latest
+        - image: php:8.2-apache
           name: backend
           ports:
             - containerPort: 80

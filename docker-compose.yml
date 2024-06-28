@@ -13,13 +13,6 @@ services:
     build:
       context: .
       dockerfile: DockerfilePHP
-    environment:
-      - MYSQL_DBHOST=db
-      - MYSQL_DBPORT=3306
-      - MYSQL_DBUSER=root
-      - MYSQL_DBPASS=password
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DBNAME=react-php
     ports:
       - 8000:80
     networks:
@@ -42,6 +35,11 @@ services:
   db:
     image: mysql:latest
     restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: react-php
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
     volumes:
       - sqldb:/var/lib/mysql
     networks:
@@ -55,6 +53,7 @@ services:
     environment:
       PMA_HOST: db
       PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: password
     ports:
       - 8181:80
     networks:

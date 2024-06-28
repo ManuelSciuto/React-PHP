@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    kompose.cmd: kompose convert
+    kompose.cmd: kompose convert -f docker-compose.yml -o kind/
     kompose.version: 1.26.0 (40646f47)
   creationTimestamp: null
   labels:
@@ -17,7 +17,7 @@ spec:
   template:
     metadata:
       annotations:
-        kompose.cmd: kompose convert
+        kompose.cmd: kompose convert -f docker-compose.yml -o kind/
         kompose.version: 1.26.0 (40646f47)
       creationTimestamp: null
       labels:
@@ -26,6 +26,8 @@ spec:
     spec:
       containers:
         - env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: password
             - name: PMA_HOST
               value: db
             - name: PMA_PORT
