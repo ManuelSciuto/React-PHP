@@ -33,19 +33,27 @@ function Login() {
         rememberMe: ricordami,
       }),
     };
-    const response = await fetch("http://localhost:8000/login.php", req);
-    setIsLoading(false);
-    if (response.ok) {
-      const responseData = await response.json();
-      if (Object.prototype.hasOwnProperty.call(responseData, "token")) {
-        localStorage.setItem(tokenName, responseData.token);
-        eventEmitter.emit("authChange", true);
-        nav("/");
-      } else if (Object.prototype.hasOwnProperty.call(responseData, "error")) {
-        await handleError(responseData.error);
+    try {
+      const response = await fetch("http://localhost:8000/login.php", req);
+      setIsLoading(false);
+      if (response.ok) {
+        try {
+          const responseData = await response.json();
+          if (responseData && responseData.token) {
+            localStorage.setItem(tokenName, responseData.token);
+            eventEmitter.emit("authChange", true);
+            nav("/");
+          } else if (responseData && responseData.error) {
+            await handleError(responseData.error);
+          }
+        } catch (error) {
+          await handleError("Errore nella ricezione della risposta");
+        }
+      } else {
+        await handleError("Errore, si prega di riprovare");
       }
-    } else {
-      await handleError("Errore, si prega di riprovare");
+    } catch (error) {
+      console.error("Errore: ", error);
     }
   };
 

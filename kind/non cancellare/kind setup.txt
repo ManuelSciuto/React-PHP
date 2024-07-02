@@ -1,4 +1,4 @@
-kompose convert nella parent dir (genera i file nella parent dir ma passali manualmente DA SISTEMARE)
+kompose convert -o /kind nella parent dir
 
 minikube start (se non funziona fai minikube delete e minikube start)
 

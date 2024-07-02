@@ -1,36 +1,31 @@
-version: "3.1"
-
-volumes:
-  sqldb:
-
-networks:
-  sqlnetwork:
+version: '3.8'
 
 services:
   backend:
-    image: php:8.2-apache
-    restart: unless-stopped
+    container_name: backend
     build:
-      context: .
-      dockerfile: DockerfilePHP
+      context: ./php
+      dockerfile: Dockerfile
+    volumes:
+      - ./php:/var/www/html
     ports:
-      - 8000:80
+      - 8000:80  
     networks:
       - sqlnetwork
     depends_on:
       - db
 
   frontend:
-    image: nginx:alpine
     container_name: frontend
     build:
-      context: .
-      dockerfile: DockerfileREACT
-    restart: always
+      context: ./React
+      dockerfile: Dockerfile
+    volumes:
+      - ./React:/usr/share/nginx/html
     ports:
-      - 5173:80
-    networks:
-      - sqlnetwork
+      - "5173:80"
+    depends_on:
+      - backend
 
   db:
     image: mysql:latest
@@ -38,14 +33,12 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: react-php
-      MYSQL_USER: root
-      MYSQL_PASSWORD: password
     volumes:
       - sqldb:/var/lib/mysql
+    ports:
+      - "3306:3306"
     networks:
       - sqlnetwork
-    ports:
-      - 3306:3306
 
   phpmyadmin:
     image: phpmyadmin:latest
@@ -55,6 +48,12 @@ services:
       PMA_PORT: 3306
       MYSQL_ROOT_PASSWORD: password
     ports:
-      - 8181:80
+      - "8181:80"
     networks:
       - sqlnetwork
+
+networks:
+  sqlnetwork:
+
+volumes:
+  sqldb:
