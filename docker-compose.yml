@@ -1,15 +1,11 @@
-version: '3.8'
+version: "3.8"
 
 services:
   backend:
     container_name: backend
-    build:
-      context: ./php
-      dockerfile: Dockerfile
-    volumes:
-      - ./php:/var/www/html
+    image: manuel393/backend-reactphp:v1.0
     ports:
-      - 8000:80  
+      - "8000:80"
     networks:
       - sqlnetwork
     depends_on:
@@ -17,11 +13,7 @@ services:
 
   frontend:
     container_name: frontend
-    build:
-      context: ./React
-      dockerfile: Dockerfile
-    volumes:
-      - ./React:/usr/share/nginx/html
+    image: manuel393/frontend-reactphp:v1.0
     ports:
       - "5173:80"
     depends_on:

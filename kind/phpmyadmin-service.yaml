@@ -3,7 +3,8 @@ kind: Service
 metadata:
   annotations:
     kompose.cmd: kompose convert -o kind
-    kompose.version: 1.34.0 (cbf2835db)
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
   labels:
     io.kompose.service: phpmyadmin
   name: phpmyadmin
@@ -14,3 +15,5 @@ spec:
       targetPort: 80
   selector:
     io.kompose.service: phpmyadmin
+status:
+  loadBalancer: {}
