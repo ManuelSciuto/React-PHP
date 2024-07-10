@@ -1,0 +1,13 @@
+kompose convert -o kind nella parent dir
+
+minikube start (se non funziona fai minikube delete e minikube start)
+
+modifica il numero di repliche
+
+kubectl apply -f kind\
+
+kubectl port-forward svc/backend 8000:8000
+
+kubectl port-forward svc/frontend 5173:5173
+
+apri localhost:5173 
