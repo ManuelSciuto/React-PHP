@@ -19,6 +19,22 @@ services:
     depends_on:
       - backend
 
+  frontend-na:
+    container_name: frontend-na
+    image: manuel393/frontend-na-reactphp:v1.0
+    ports:
+      - "5174:80"
+    depends_on:
+      - backend
+
+  frontend-as:
+    container_name: frontend-as
+    image: manuel393/frontend-as-reactphp:v1.0
+    ports:
+      - "5175:80"
+    depends_on:
+      - backend
+
   db:
     image: mysql:latest
     restart: unless-stopped

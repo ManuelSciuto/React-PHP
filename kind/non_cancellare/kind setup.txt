@@ -11,3 +11,5 @@ kubectl port-forward svc/backend 8000:8000
 kubectl port-forward svc/frontend 5173:5173
 
 apri localhost:5173 
+
+#https://docs.nginx.com/nginx-ingress-controller/installation/installing-nic/installation-with-manifests/
