@@ -6,6 +6,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { Veicolo } from "../misc/classes/Veicolo.ts";
 import { twMerge } from "tailwind-merge";
 import { sleep } from "../components/sleep.ts";
+import { MarcheMezzi } from "../misc/marcheMezzi.ts";
 
 function AggiungiVeicolo() {
   const [error, setError] = useState("");
@@ -32,13 +33,19 @@ function AggiungiVeicolo() {
     if (
       dataVeicolo.brand === "" ||
       dataVeicolo.model === "" ||
-      dataVeicolo.tag === "" ||
       dataVeicolo.reg_date === ""
     ) {
       await handleError("Inserire tutti i valori richiesti");
       return;
     }
     const formData = new FormData();
+    if (dataVeicolo.model.length <= 3) {
+      dataVeicolo.model = dataVeicolo.model.toUpperCase();
+    } else {
+      dataVeicolo.model =
+        dataVeicolo.model[0].toUpperCase() +
+        dataVeicolo.model.slice(1).toLowerCase();
+    }
     formData.append("vehicle_id", dataVeicolo.vehicle_id.toString());
     formData.append("arrival_date", dataVeicolo.arrival_date);
     formData.append("status", dataVeicolo.status);
@@ -53,7 +60,7 @@ function AggiungiVeicolo() {
     };
     const response = await fetch(
       "http://localhost:8000/vehicles/add_vehicle.php",
-      req,
+      req
     );
     if (response.ok) {
       const responseData = await response.text();
@@ -73,7 +80,7 @@ function AggiungiVeicolo() {
       <div
         className={twMerge(
           "bg-red-600 text-white duration-150 font-semibold text-lg",
-          error !== "" && "px-2 py-1",
+          error !== "" && "px-2 py-1"
         )}
       >
         {error}
@@ -90,15 +97,20 @@ function AggiungiVeicolo() {
             <label className="block pl-px mb-0.5 text-sm font-medium">
               Marca<label className="text-red-600">*</label>
             </label>
-            <input
-              type="text"
+            <select
               value={dataVeicolo.brand}
               onChange={(e) =>
                 setDataVeicolo({ ...dataVeicolo, brand: e.target.value })
               }
               className="bg-neutral-300 hover:bg-neutral-400 border border-gray-700 text-black rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
               required={true}
-            />
+            >
+              {Object.entries(MarcheMezzi).map(([key, value]) => (
+                <option key={key} value={key}>
+                  {value}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="w-full md:w-[calc(50%-6px)]">
             <label className="block pl-px mb-0.5 text-sm font-medium">
@@ -116,7 +128,7 @@ function AggiungiVeicolo() {
           </div>
           <div className="w-full md:w-[calc(50%-6px)]">
             <label className="block pl-px mb-0.5 text-sm font-medium">
-              Targa<label className="text-red-600">*</label>
+              Targa
             </label>
             <input
               type="text"
@@ -125,7 +137,6 @@ function AggiungiVeicolo() {
                 setDataVeicolo({ ...dataVeicolo, tag: e.target.value })
               }
               className="bg-neutral-300 hover:bg-neutral-400 border border-gray-700 text-black rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
-              required={true}
             />
           </div>
           <div className="w-full md:w-[calc(50%-6px)]">

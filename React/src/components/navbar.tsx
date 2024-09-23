@@ -3,15 +3,32 @@ import { useEffect, useState } from "react";
 import { validateLogin } from "./validation.ts";
 import eventEmitter from "../misc/eventEmitter.tsx";
 import Logo1 from "./svgs/logo1.tsx";
+import { providerValidateLogin } from "./providerValidation.ts";
+import { twMerge } from "tailwind-merge";
 
 function Navbar() {
   const [isAuth, setIsAuth] = useState(false);
+  const [providerId, setProviderId] = useState(-1);
 
   useEffect(() => {
     async function setAuth() {
       setIsAuth((await validateLogin()) !== null);
     }
     setAuth().then(null);
+
+    async function setProviderAuth() {
+      const providerToken: {
+        id_provider: number;
+        name: string;
+      } | null = await providerValidateLogin();
+      if (providerToken) {
+        setProviderId(providerToken.id_provider);
+        setIsAuth(true);
+      }
+    }
+    if (!isAuth) {
+      setProviderAuth().then(null);
+    }
 
     const handleAuthChange = (authStatus: boolean) => {
       setIsAuth(authStatus);
@@ -30,7 +47,10 @@ function Navbar() {
       </NavLink>
       <NavLink
         className={({ isActive }) =>
-          isActive ? "text-blue-500 pt-px" : "pt-px"
+          twMerge(
+            isActive ? "text-blue-500 pt-px" : "pt-px",
+            providerId !== -1 && "hidden"
+          )
         }
         to="/Veicoli"
       >

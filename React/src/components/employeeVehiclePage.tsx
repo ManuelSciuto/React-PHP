@@ -30,7 +30,7 @@ function EmployeeVehiclePage({ userId, handleError }: Props) {
     };
     const response = await fetch(
       "http://localhost:8000/vehicles/get_employee_vehicles.php",
-      req,
+      req
     );
     if (response.ok) {
       const responseData = await response.json();
@@ -48,7 +48,7 @@ function EmployeeVehiclePage({ userId, handleError }: Props) {
 
   const handleRemoveJob = async (vehicle_id: number) => {
     const check = window.confirm(
-      "Vuoi rimuovere questo veicolo da quelli su cui stai lavorando?",
+      "Vuoi rimuovere questo veicolo da quelli su cui stai lavorando?"
     );
     if (!check) return;
     const req = {
@@ -61,12 +61,13 @@ function EmployeeVehiclePage({ userId, handleError }: Props) {
     };
     const response = await fetch(
       "http://localhost:8000/vehicles/remove_job.php",
-      req,
+      req
     );
     if (response.ok) {
       const responseData = await response.text();
       if (responseData === "Veicolo eliminato con successo") {
         setReTrigger((e) => !e);
+        setVehicles(vehicles.filter((v) => v.vehicle_id != vehicle_id));
       } else {
         await handleError(responseData);
       }
@@ -108,6 +109,7 @@ function EmployeeVehiclePage({ userId, handleError }: Props) {
               setExpandVeicolo={setExpandedVehicle}
               setEditVeicolo={setEditVehicle}
               handleRemoveJob={handleRemoveJob}
+              showOwnerName={true}
             />
           ))
         ) : (

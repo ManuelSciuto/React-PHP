@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { tokenName } from "../config.ts";
+import { fornitoreTokenName, tokenName } from "../config.ts";
 import { NavLink, useNavigate } from "react-router-dom";
 import { sleep } from "../components/sleep.ts";
 import eventEmitter from "../misc/eventEmitter.tsx";
@@ -12,6 +12,11 @@ function Login() {
   const [password, setPassword] = useState("");
   const [ricordami, setRicordami] = useState(false);
   const [error, setError] = useState("");
+  const [isFornitoreLoading, setIsFornitoreLoading] = useState(false);
+  const [fornitoreError, setFornitoreError] = useState("");
+  const [isFornitore, setIsFornitore] = useState(false);
+  const [fornitoreKey, setFornitoreKey] = useState("");
+  const [fornitoreMail, setFornitoreMail] = useState("");
   const nav = useNavigate();
 
   const handleError = async (error: string) => {
@@ -19,6 +24,13 @@ function Login() {
     setIsLoading(false);
     await sleep(4000);
     setError("");
+  };
+
+  const handleFornitoreError = async (error: string) => {
+    setFornitoreError(error);
+    setIsFornitoreLoading(false);
+    await sleep(4000);
+    setFornitoreError("");
   };
 
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -51,6 +63,48 @@ function Login() {
         }
       } else {
         await handleError("Errore, si prega di riprovare");
+      }
+    } catch (error) {
+      console.error("Errore: ", error);
+    }
+  };
+
+  const handleFornitoreLogin = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    e.preventDefault();
+    setIsLoading(true);
+    const req = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: fornitoreMail.trim(),
+        key: fornitoreKey.trim(),
+      }),
+    };
+    try {
+      const response = await fetch(
+        "http://localhost:8000/loginFornitore.php",
+        req
+      );
+      setIsLoading(false);
+      if (response.ok) {
+        try {
+          const responseData = await response.json();
+          console.log(responseData);
+
+          if (Object.prototype.hasOwnProperty.call(responseData, "token")) {
+            localStorage.setItem(fornitoreTokenName, responseData.token);
+            eventEmitter.emit("authChange", true);
+            nav("/");
+          } else if (responseData && responseData.error) {
+            await handleFornitoreError(responseData.error);
+          }
+        } catch (error) {
+          await handleFornitoreError("Errore nella ricezione della risposta");
+        }
+      } else {
+        await handleFornitoreError("Errore, si prega di riprovare");
       }
     } catch (error) {
       console.error("Errore: ", error);
@@ -127,6 +181,55 @@ function Login() {
         >
           Registrati
         </NavLink>
+      </div>
+      <div className="flex flex-wrap gap-y-1 w-1/2 min-w-[23rem] text-white mt-2 justify-center max-w-md font-medium gap-x-1 rounded-lg p-2 mx-auto border-2">
+        <div className="w-full flex justify-center gap-x-1">
+          Sei un fornitore?{" "}
+          <button
+            onClick={() => setIsFornitore(!isFornitore)}
+            className="text-blue-500 hover:text-blue-600"
+          >
+            {isFornitore ? "Chiudi" : "Inserisci la chiave"}
+          </button>
+        </div>
+        {isFornitore && (
+          <div className="w-full flex flex-wrap gap-y-0.5">
+            <div className="w-full">
+              <label className="block pl-px mb-0.5 text-sm font-medium text-white">
+                Email
+              </label>
+              <input
+                type="text"
+                value={fornitoreMail}
+                onChange={(e) => setFornitoreMail(e.target.value)}
+                className="bg-neutral-300 hover:bg-neutral-400 border border-gray-700 text-black rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
+                required={true}
+              />
+            </div>
+            <label className="block mt-1 w-full pl-px mb-0.5 text-sm font-medium text-white">
+              Chiave d'accesso
+            </label>
+            <input
+              type="text"
+              value={fornitoreKey}
+              onChange={(e) => setFornitoreKey(e.target.value)}
+              className="w-[75%] bg-neutral-300 font-semibold hover:bg-neutral-400 border border-neutral-300 text-black rounded-l-lg focus:ring-primary-600 focus:border-primary-600 block p-2"
+              required={true}
+            />
+            <button
+              type="button"
+              onClick={(e) => handleFornitoreLogin(e)}
+              className="w-[25%] bg-blue-500 hover:bg-blue-600 rounded-r-lg"
+            >
+              {isFornitoreLoading ? <LoadingSpinner /> : "Inserire"}
+            </button>
+          </div>
+        )}
+        {fornitoreError && (
+          <p className="text-red-600 mt-1 font-semibold text-lg text-center">
+            {fornitoreError}
+          </p>
+        )}
       </div>
     </div>
   );

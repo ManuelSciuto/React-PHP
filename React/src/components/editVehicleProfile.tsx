@@ -1,5 +1,6 @@
 import { Veicolo } from "../misc/classes/Veicolo.ts";
 import { Dispatch, SetStateAction, useState } from "react";
+import { getMarcaFromSigla, MarcheMezzi } from "../misc/marcheMezzi.ts";
 
 interface Props {
   veicolo: Veicolo;
@@ -18,18 +19,24 @@ function EditVehicleProfile({
 }: Props) {
   const [dataVeicolo, setDataVeicolo] = useState<Veicolo>(veicolo);
   const [veicoloInOfficina, setVeicoloInOfficina] = useState(
-    dataVeicolo.arrival_date !== "",
+    dataVeicolo.arrival_date !== ""
   );
 
   const handleUpdate = async () => {
     if (
       dataVeicolo.brand === "" ||
       dataVeicolo.model === "" ||
-      dataVeicolo.tag === "" ||
       dataVeicolo.reg_date === ""
     ) {
       await handleError("Inserire tutti i valori richiesti");
       return;
+    }
+    if (dataVeicolo.model.length <= 7) {
+      dataVeicolo.model = dataVeicolo.model.toUpperCase();
+    } else {
+      dataVeicolo.model =
+        dataVeicolo.model[0].toUpperCase() +
+        dataVeicolo.model.slice(1).toLowerCase();
     }
     const reqBody = isEmployee
       ? {
@@ -55,7 +62,7 @@ function EditVehicleProfile({
     };
     const response = await fetch(
       "http://localhost:8000/vehicles/update_vehicle_data.php",
-      req,
+      req
     );
     if (response.ok) {
       const responseData = await response.text();
@@ -77,15 +84,20 @@ function EditVehicleProfile({
             <label className="block pl-px mb-0.5 text-sm font-medium">
               Marca<label className="text-red-600">*</label>
             </label>
-            <input
-              type="text"
+            <select
               value={dataVeicolo.brand}
               onChange={(e) =>
                 setDataVeicolo({ ...dataVeicolo, brand: e.target.value })
               }
               className="bg-neutral-300 hover:bg-neutral-400 border border-gray-700 text-black rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
               required={true}
-            />
+            >
+              {Object.entries(MarcheMezzi).map(([key, value]) => (
+                <option key={key} value={key}>
+                  {value}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="w-full md:w-[calc(50%-6px)]">
             <label className="block pl-px mb-0.5 text-sm font-medium">

@@ -3,7 +3,7 @@ import LoadingSpinner from "../components/svgs/loadingSpinner.tsx";
 import { tokenName } from "../config.ts";
 import eventEmitter from "../misc/eventEmitter.tsx";
 import { sleep } from "../components/sleep.ts";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 function Registrazione() {
   const [isLoading, setIsLoading] = useState(false);
@@ -65,7 +65,7 @@ function Registrazione() {
     };
     const response = await fetch(
       "http://localhost:8000/users/add_client.php",
-      req,
+      req
     );
     if (response.ok) {
       let responseData = await response.text();
@@ -112,7 +112,7 @@ function Registrazione() {
   }, [isLoading]);
 
   return (
-    <div>
+    <div className="pb-5">
       <div className="w-1/2 rounded-lg min-w-[23rem] mt-5 mx-auto border-2 max-w-md">
         <div className="w-full text-center pb-5 pt-2 bg-blue-500 text-3xl rounded-t-md font-bold text-white">
           BENVENUTO
@@ -228,6 +228,15 @@ function Registrazione() {
             {isLoading ? <LoadingSpinner /> : "Registrati"}
           </button>
         </form>
+      </div>
+      <div className="w-1/2 min-w-[23rem] text-white flex mt-2 justify-center max-w-md font-medium gap-x-1 rounded-lg p-2 mx-auto border-2">
+        Vuoi diventare un fornitore?{" "}
+        <NavLink
+          to="/FornitoreRegistrazione"
+          className="text-blue-500 hover:text-blue-600"
+        >
+          Inoltra la richiesta
+        </NavLink>
       </div>
     </div>
   );

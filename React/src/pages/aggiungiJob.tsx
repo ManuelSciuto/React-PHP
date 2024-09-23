@@ -7,6 +7,7 @@ import NoUserCountdown from "../components/noUserCountdown.tsx";
 import DownArrow from "../components/svgs/downArrow.tsx";
 import { Veicolo } from "../misc/classes/Veicolo.ts";
 import ProfiloVeicolo from "../components/profiloVeicolo.tsx";
+import { MarcheMezzi } from "../misc/marcheMezzi.ts";
 
 function AggiungiJob() {
   const [error, setError] = useState("");
@@ -39,7 +40,7 @@ function AggiungiJob() {
     };
     const response = await fetch(
       "http://localhost:8000/vehicles/search_vehicles.php",
-      req,
+      req
     );
     if (response.ok) {
       const responseData = await response.json();
@@ -62,7 +63,7 @@ function AggiungiJob() {
     };
     const response = await fetch(
       "http://localhost:8000/vehicles/add_job.php",
-      req,
+      req
     );
     if (response.ok) {
       const responseData = await response.text();
@@ -85,7 +86,7 @@ function AggiungiJob() {
       <div
         className={twMerge(
           "bg-red-600 text-white duration-150 font-semibold text-lg",
-          error !== "" && "px-2 py-1",
+          error !== "" && "px-2 py-1"
         )}
       >
         {error}
@@ -94,7 +95,7 @@ function AggiungiJob() {
         <div
           className={twMerge(
             "w-11/12 flex flex-wrap min-w-[23rem] duration-500 mx-auto max-w-4xl overflow-hidden",
-            openFiltri ? "max-h-[214px]" : "max-h-0",
+            openFiltri ? "max-h-[214px]" : "max-h-0"
           )}
         >
           <form className="w-full flex flex-wrap gap-y-3 py-2 md:justify-between md:items-end">
@@ -102,14 +103,21 @@ function AggiungiJob() {
               <label className="block pl-px mb-0.5 text-sm font-medium">
                 Marca
               </label>
-              <input
-                type="text"
+              <select
                 value={filtri.brand}
                 onChange={(e) =>
                   setFiltri({ ...filtri, brand: e.target.value })
                 }
                 className="bg-neutral-300 hover:bg-neutral-400 border border-gray-700 text-black rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
-              />
+                required={true}
+              >
+                <option value={""}>Tutte</option>
+                {Object.entries(MarcheMezzi).map(([key, value]) => (
+                  <option key={key} value={key}>
+                    {value}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="w-full md:w-[calc(50%-35.5px)]">
               <label className="block pl-px mb-0.5 text-sm font-medium">
@@ -139,7 +147,7 @@ function AggiungiJob() {
           <DownArrow
             className={twMerge(
               "h-6 w-6 duration-500",
-              openFiltri && "rotate-180",
+              openFiltri && "rotate-180"
             )}
           />{" "}
           Filtri
@@ -154,6 +162,7 @@ function AggiungiJob() {
               veicolo={vehicle}
               handleError={handleError}
               handleAddJob={handleAddJob}
+              showOwnerName={true}
             />
           ))
         ) : (

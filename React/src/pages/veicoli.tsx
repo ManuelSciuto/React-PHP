@@ -33,7 +33,7 @@ function Veicoli() {
     };
     const response = await fetch(
       "http://localhost:8000/users/is_employee.php",
-      req,
+      req
     );
     if (response.ok) {
       const responseData = await response.text();
@@ -60,7 +60,7 @@ function Veicoli() {
       <div
         className={twMerge(
           "bg-red-600 text-white duration-150 font-semibold text-lg",
-          error !== "" && "px-2 py-1",
+          error !== "" && "px-2 py-1"
         )}
       >
         {error}

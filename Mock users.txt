@@ -1,0 +1,17 @@
+Manu393
+Pass: 123456
+
+Dem123
+Pass: 123456
+
+Mock fornitore 1 
+Mail: mockfornitore1@gmail.com
+Key: AoJJjaxWDLDFlWjt
+
+Mock fornitore 2 
+Mail: mockfornitore2@gmail.com
+Key: HVnvGqptFT8ShJ93
+
+Mock fornitore 3 
+Mail: mockfornitore3@gmail.com
+Key: A9zsCV0KMBUJX8xe

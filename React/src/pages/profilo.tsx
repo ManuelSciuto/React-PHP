@@ -9,6 +9,21 @@ import { sleep } from "../components/sleep.ts";
 import OptionIcon from "../components/svgs/optionIcon.tsx";
 import LoadingSpinner from "../components/svgs/loadingSpinner.tsx";
 import NoUserCountdown from "../components/noUserCountdown.tsx";
+import { providerValidateLogin } from "../components/providerValidation.ts";
+import ProviderProfilePage from "../components/providerProfilePage.tsx";
+
+export class ProviderData {
+  city: string;
+  name: string;
+  address: string;
+  email: string;
+  constructor(data: ProviderData | null) {
+    this.city = data ? data.city : "";
+    this.name = data ? data.name : "";
+    this.address = data ? data.address : "";
+    this.email = data ? data.email : "";
+  }
+}
 
 function Profilo() {
   const [showOpts, setShowOpts] = useState(false);
@@ -17,6 +32,10 @@ function Profilo() {
   const [dataUpdateError, setDataUpdateError] = useState("");
   const [isUpdatingData, setIsUpdatingData] = useState(false);
   const [userId, setUserId] = useState(-1);
+  const [providerId, setProviderId] = useState(-1);
+  const [providerData, setProviderData] = useState<ProviderData>(
+    new ProviderData(null)
+  );
   const [isEmployee, setIsEmployee] = useState(false);
   const [user, setUser] = useState<ClientData | EmployeeData | null>(null);
   const [currentPassword, setCurrentPassword] = useState("");
@@ -26,8 +45,7 @@ function Profilo() {
 
   async function setAuth() {
     const id = await validateLogin();
-    if (id === null || id <= 0) setUserId(-1);
-    else if (id > 0) setUserId(id);
+    if (id) setUserId(id);
   }
 
   async function getUser() {
@@ -39,7 +57,7 @@ function Profilo() {
     };
     const response = await fetch(
       "http://localhost:8000/users/get_user.php",
-      req,
+      req
     );
     if (response.ok) {
       const data = await response.json();
@@ -51,7 +69,28 @@ function Profilo() {
         setUser(new ClientData(data));
       } else {
         window.alert(
-          "Errore nel caricamento dei dati, ci scusiamo per l'inconveniente. Verrai reindirizzato alla home",
+          "Errore nel caricamento dei dati, ci scusiamo per l'inconveniente. Verrai reindirizzato alla home"
+        );
+        nav("/");
+      }
+    }
+  }
+
+  async function getProvider() {
+    if (providerId === -1) return;
+    const req = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: providerId }),
+    };
+    const response = await fetch("http://localhost:8000/get_provider.php", req);
+    if (response.ok) {
+      const data = await response.json();
+      if (!Object.prototype.hasOwnProperty.call(data, "error")) {
+        setProviderData(new ProviderData(data));
+      } else {
+        window.alert(
+          "Errore nel caricamento dei dati, ci scusiamo per l'inconveniente. Verrai reindirizzato alla home"
         );
         nav("/");
       }
@@ -60,11 +99,27 @@ function Profilo() {
 
   useEffect(() => {
     setAuth().then(null);
+    async function setProviderAuth() {
+      const providerToken: {
+        id_provider: number;
+        name: string;
+      } | null = await providerValidateLogin();
+      if (providerToken) {
+        setProviderId(providerToken.id_provider);
+      }
+    }
+    if (userId === -1) {
+      setProviderAuth().then(null);
+    }
   }, []);
 
   useEffect(() => {
     getUser().then(null);
   }, [userId]);
+
+  useEffect(() => {
+    getProvider().then(null);
+  }, [providerId]);
 
   const handleOptsError = async (optsError: string) => {
     setOptsError(optsError);
@@ -105,7 +160,7 @@ function Profilo() {
     };
     const response = await fetch(
       "http://localhost:8000/users/delete_client.php",
-      req,
+      req
     );
     setIsDeleting(false);
     if (response.ok) {
@@ -146,7 +201,7 @@ function Profilo() {
     };
     const response = await fetch(
       "http://localhost:8000/users/modify_data.php",
-      req,
+      req
     );
     setIsUpdatingData(false);
     if (response.ok) {
@@ -169,7 +224,7 @@ function Profilo() {
     if (!user) return;
     if (newPassword.length < 6) {
       await handlePasswordError(
-        "La tua password dev'essere lunga almeno 6 caratteri",
+        "La tua password dev'essere lunga almeno 6 caratteri"
       );
       return;
     }
@@ -184,7 +239,7 @@ function Profilo() {
     };
     const response = await fetch(
       "http://localhost:8000/users/update_password.php",
-      req,
+      req
     );
     if (response.ok) {
       const resText = await response.text();
@@ -199,6 +254,9 @@ function Profilo() {
     await setAuth();
     await getUser();
   };
+
+  if (providerData.name !== "")
+    return <ProviderProfilePage providerDataProp={providerData} />;
 
   if (userId === -1) return <NoUserCountdown />;
 

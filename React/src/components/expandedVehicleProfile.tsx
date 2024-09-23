@@ -1,4 +1,5 @@
 import { Veicolo } from "../misc/classes/Veicolo.ts";
+import { getMarcaFromSigla } from "../misc/marcheMezzi.ts";
 
 interface Props {
   expandedVehicle: Veicolo;
@@ -9,7 +10,7 @@ function ExpandedVehicleProfile({ expandedVehicle }: Props) {
     <div className="border-2 p-4 w-2/3 mx-auto mt-5 bg-neutral-500">
       <p className="py-1.5 text-white px-5 w-fit text-lg font-semibold rounded-md bg-blue-500">
         {[
-          expandedVehicle.brand,
+          getMarcaFromSigla(expandedVehicle.brand),
           expandedVehicle.model,
           expandedVehicle.reg_date.split("-")[0],
         ].join(" ")}

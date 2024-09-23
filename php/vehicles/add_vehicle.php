@@ -5,12 +5,12 @@ include '../db.php';
 $arrival_date = $_POST['arrival_date'] ?? null;
 $status = $_POST['status'] ?? null;
 $client_id = $_POST['client_id'] ?? 0;
-$model = $_POST['model'] ?? "a";
-$tag = $_POST['tag'] ?? "a";
-$brand = $_POST['brand'] ?? "a";
-$reg_date = $_POST['reg_date'] ?? "2000-01-01";
+$model = $_POST['model'] ?? "";
+$tag = $_POST['tag'] ?? null;
+$brand = $_POST['brand'] ?? "";
+$reg_date = $_POST['reg_date'] ?? "";
 
-if ($client_id > 0 && !empty($model) && !empty($tag) && !empty($brand) && !empty($reg_date)) {
+if ($client_id > 0 && !empty($model) && !empty($brand) && !empty($reg_date)) {
     mysqli_begin_transaction($conn);
     try {
         $query = "INSERT INTO vehicles (arrival_date, status, client_id) VALUES (?, ?, ?)";
