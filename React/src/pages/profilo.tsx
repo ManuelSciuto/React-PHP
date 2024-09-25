@@ -296,7 +296,7 @@ function Profilo() {
           </div>
           <OptionIcon
             onClick={() => setShowOpts((prevState) => !prevState)}
-            className="cursor-pointer fill-gray-600 w-7 h-7 absolute top-3 right-3"
+            className="cursor-pointer fill-gray-400 w-7 h-7 absolute top-3 right-3"
           />
           <div
             className={

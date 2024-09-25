@@ -5,12 +5,14 @@ import { twMerge } from "tailwind-merge";
 import { sleep } from "../components/sleep.ts";
 import DownArrow from "../components/svgs/downArrow.tsx";
 import { getMarcaFromSigla, MarcheMezzi } from "../misc/marcheMezzi.ts";
-import { CategorieRicambi } from "../misc/categorieRicambi.ts";
 import { providerValidateLogin } from "../components/providerValidation.ts";
 import { ProviderData } from "./profilo.tsx";
 import { useNavigate } from "react-router-dom";
 import ProviderRicambiPage from "../components/providerRicambiPage.tsx";
-import { fornitoreTokenName } from "../config.ts";
+import Arrow from "../components/svgs/arrow.tsx";
+import BodyPart from "../components/bodyPart.tsx";
+import MechPart from "../components/mechPart.tsx";
+import LoadingSpinner from "../components/svgs/loadingSpinner.tsx";
 
 function Ricambi() {
   const nav = useNavigate();
@@ -22,9 +24,13 @@ function Ricambi() {
   const [userBrands, setUserBrands] = useState<string>("");
   const [filtri, setFiltri] = useState({
     brands: userBrands,
-    categoria: "Tutte",
+    bodyParts: true,
+    mechParts: false,
   });
   const [openFiltri, setOpenFiltri] = useState<boolean>(true);
+  const [pagina, setPagina] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
+  const [ricambi, setRicambi] = useState([]);
 
   const handleError = async (errorText: string) => {
     setError(errorText);
@@ -90,11 +96,51 @@ function Ricambi() {
     }
   }
 
-  const handleFilter = (
-    e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
+  const handleFilter = async (
+    e?: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>,
+    currPage?: number
   ) => {
-    e.preventDefault();
-    console.log(filtri);
+    if (e) {
+      e.preventDefault();
+    }
+    setIsLoading(true);
+    const req = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        brands: filtri.brands
+          .split(",")
+          .map((brand) => getMarcaFromSigla(brand)),
+        page: currPage ? currPage : pagina,
+      }),
+    };
+    if (filtri.bodyParts && !filtri.mechParts) {
+      const response = await fetch(
+        "http://localhost:8000/parts/get_body_parts.php",
+        req
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setRicambi(data);
+      } else {
+        setRicambi([]);
+      }
+    } else if (!filtri.bodyParts && filtri.mechParts) {
+      const response = await fetch(
+        "http://localhost:8000/parts/get_mech_parts.php",
+        req
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setRicambi(data);
+      } else {
+        setRicambi([]);
+      }
+    } else {
+      window.alert("Errore nella ricezione dei dati.");
+      nav("/");
+    }
+    setIsLoading(false);
   };
 
   async function getProvider() {
@@ -146,6 +192,10 @@ function Ricambi() {
     getProvider().then(null);
   }, [providerId]);
 
+  useEffect(() => {
+    handleFilter();
+  }, [filtri, pagina]);
+
   if (providerData.name !== "")
     return <ProviderRicambiPage providerId={providerId} />;
 
@@ -153,7 +203,7 @@ function Ricambi() {
     return <NoUserCountdown />;
 
   return (
-    <div className="text-white">
+    <div className="h-full max-h-[calc(100%-172px)] text-white">
       <div
         className={twMerge(
           "bg-red-600 text-white duration-150 font-semibold text-lg",
@@ -170,7 +220,7 @@ function Ricambi() {
           )}
         >
           <form className="w-full flex flex-wrap gap-y-3 py-2 md:justify-between md:items-end">
-            <div className="w-full md:w-[calc(50%-35.5px)]">
+            <div className="mx-auto w-full md:w-[calc(50%-35.5px)]">
               <label className="block pl-px mb-0.5 text-sm font-medium">
                 Marca
               </label>
@@ -184,6 +234,9 @@ function Ricambi() {
                 required={true}
               >
                 <option value={userBrands}>I tuoi mezzi</option>
+                <option value={Object.keys(MarcheMezzi).join(",")}>
+                  Tutte
+                </option>
                 {Object.entries(MarcheMezzi).map(([key, value]) => (
                   <option key={key} value={key}>
                     {value}
@@ -191,33 +244,45 @@ function Ricambi() {
                 ))}
               </select>
             </div>
-            <div className="w-full md:w-[calc(50%-35.5px)]">
-              <label className="block pl-px mb-0.5 text-sm font-medium">
-                Categoria
-              </label>
-              <select
-                value={filtri.categoria}
-                onChange={(e) => {
-                  setFiltri({ ...filtri, categoria: e.target.value });
-                  console.log(e.target.value);
-                }}
-                className="bg-neutral-300 hover:bg-neutral-400 border border-gray-700 text-black rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2"
-                required={true}
+
+            <div className="w-full items-center flex justify-between">
+              <div className="flex gap-x-2 items-center pt-1">
+                <p className="font-semibold text-lg pb-1">Carrozzeria</p>
+                <input
+                  checked={filtri.bodyParts && !filtri.mechParts}
+                  onChange={(e) =>
+                    setFiltri({
+                      ...filtri,
+                      bodyParts: e.target.checked,
+                      mechParts: !e.target.checked,
+                    })
+                  }
+                  type="checkbox"
+                  className="scale-125"
+                />
+              </div>
+              <div className="flex gap-x-2 items-center pt-1">
+                <p className="font-semibold text-lg pb-1">Parti meccaniche</p>
+                <input
+                  checked={filtri.mechParts && !filtri.bodyParts}
+                  onChange={(e) =>
+                    setFiltri({
+                      ...filtri,
+                      bodyParts: !e.target.checked,
+                      mechParts: e.target.checked,
+                    })
+                  }
+                  type="checkbox"
+                  className="scale-125"
+                />
+              </div>
+              <button
+                onClick={(e) => handleFilter(e)}
+                className="bg-blue-600 hover:bg-blue-700 py-2 mb-1.5 md:mb-0 px-3 rounded-lg"
               >
-                <option value="Tutte">Tutte</option>
-                {Object.entries(CategorieRicambi).map(([key, value]) => (
-                  <option key={key} value={key}>
-                    {value}
-                  </option>
-                ))}
-              </select>
+                Filtra
+              </button>
             </div>
-            <button
-              onClick={(e) => handleFilter(e)}
-              className="bg-blue-600 hover:bg-blue-700 py-2 mb-1.5 md:mb-0 h-fit px-3 rounded-lg"
-            >
-              Filtra
-            </button>
           </form>
         </div>
         <div
@@ -231,6 +296,65 @@ function Ricambi() {
             )}
           />{" "}
           Filtri
+        </div>
+      </div>
+      <div
+        className={twMerge(
+          "mx-auto w-11/12 duration-75 h-[calc(100%-52px)] flex flex-wrap items-center",
+          !openFiltri && "h-[calc(100%+86px)]"
+        )}
+      >
+        <div className="h-[80%] w-full border-2 border-gray-500 ">
+          {ricambi.length === 0 ? (
+            <div className="h-full flex items-center justify-center">
+              {isLoading ? (
+                <LoadingSpinner />
+              ) : (
+                <p className="w-4/5 text-center">
+                  Non abbiamo trovato nessun ricambio corrispondente alla tua
+                  ricerca
+                </p>
+              )}
+            </div>
+          ) : (
+            <div className="w-full h-full overflow-y-scroll">
+              {ricambi.map((ricambio: any) =>
+                filtri.bodyParts ? (
+                  <BodyPart ricambio={ricambio} />
+                ) : (
+                  <MechPart ricambio={ricambio} />
+                )
+              )}
+            </div>
+          )}
+        </div>
+        <div className="h-[10%] w-full flex justify-center items-center gap-x-4">
+          <button
+            onClick={async (e) => {
+              if (pagina > 1) {
+                await handleFilter(e, pagina - 1);
+                setPagina((prevState) => prevState - 1);
+              }
+            }}
+            className="h-full"
+          >
+            <Arrow className="h-1/2 aspect-square fill-white" />
+          </button>
+          <p className="h-fit font-semibold">Pagina {pagina}</p>
+          <button
+            onClick={async (e) => {
+              if (ricambi.length !== 0) {
+                await handleFilter(e, pagina - 1);
+                setPagina((prevState) => prevState + 1);
+              }
+            }}
+            className={twMerge(
+              "h-full",
+              ricambi.length === 0 && "cursor-not-allowed "
+            )}
+          >
+            <Arrow className="h-1/2 aspect-square fill-white rotate-180" />
+          </button>
         </div>
       </div>
     </div>
