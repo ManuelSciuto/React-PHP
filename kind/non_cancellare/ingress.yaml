@@ -9,22 +9,25 @@ spec:
         paths:
           - path: /frontend
             pathType: Prefix
-            backend:
+            frontend:
               service:
                 name: frontend
                 port:
                   number: 5173
+              weight: 34
           - path: /frontend-na
             pathType: Prefix
-            backend:
+            frontend:
               service:
                 name: frontend-na
                 port:
                   number: 5174
+              weight: 33
           - path: /frontend-as
             pathType: Prefix
-            backend:
+            frontend:
               service:
                 name: frontend-as
                 port:
                   number: 5175
+              weight: 33

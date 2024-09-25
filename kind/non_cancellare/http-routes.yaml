@@ -1,0 +1,20 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: http-routes
+  labels:
+    gateway: frontend-gw
+spec:
+  hostnames:
+    - localhost
+  rules:
+    - backendRefs:
+    - name: frontend
+      port: 5173
+      weight: 34
+    - name: frontend-na
+      port: 5174
+      weight: 33
+      - name: frontend-as
+      port: 5175
+      weight: 33

@@ -8,6 +8,10 @@ COPY package.json package-lock.json /app/
 
 RUN npm install
 
+ARG REACT_APP_REPLICA_NUM
+
+ENV REACT_APP_REPLICA_NUM $REACT_APP_REPLICA_NUM
+
 COPY . /app
 
 RUN npm run build

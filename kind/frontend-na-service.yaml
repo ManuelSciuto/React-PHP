@@ -9,10 +9,12 @@ metadata:
     io.kompose.service: frontend-na
   name: frontend-na
 spec:
+  type: NodePort
   ports:
     - name: "5174"
       port: 5174
       targetPort: 80
+      nodePort: 30002
   selector:
     io.kompose.service: frontend-na
 status:

@@ -13,39 +13,65 @@ services:
 
   frontend-1:
     container_name: frontend-1
-    build: ./React
+    build:
+      context: React/
+      args:
+        REACT_APP_REPLICA_NUM: 1
     expose:
       - "80"
     ports:
       - "3001:80"
     environment:
-      - NOME_SERVIZIO="Frontend 1"
+      - NUM_FRONTEND=1
     depends_on:
       - backend
+    networks:
+      - webnetwork
 
   frontend-2:
     container_name: frontend-2
-    build: ./React
+    build:
+      context: React/
+      args:
+        REACT_APP_REPLICA_NUM: 2
     expose:
       - "80"
     ports:
       - "3002:80"
     environment:
-      - NOME_SERVIZIO="Frontend 2"
+      - NUM_FRONTEND=2
     depends_on:
       - backend
+    networks:
+      - webnetwork
 
   frontend-3:
     container_name: frontend-3
-    build: ./React
+    build:
+      context: React/
+      args:
+        REACT_APP_REPLICA_NUM: 3
     expose:
       - "80"
     ports:
       - "3003:80"
     environment:
-      - NOME_SERVIZIO="Frontend 3"
+      - NUM_FRONTEND=3
     depends_on:
       - backend
+    networks:
+      - webnetwork
+
+  nginx:
+    build: ./nginx
+    ports:
+      - "5173:80"
+    networks:
+      - webnetwork
+    depends_on:
+      - frontend-1
+      - frontend-2
+      - frontend-3
 
   db:
     image: mysql:latest
@@ -74,6 +100,7 @@ services:
 
 networks:
   sqlnetwork:
+  webnetwork:
 
 volumes:
   sqldb:
