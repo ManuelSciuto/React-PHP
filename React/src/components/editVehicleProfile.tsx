@@ -1,6 +1,6 @@
 import { Veicolo } from "../misc/classes/Veicolo.ts";
 import { Dispatch, SetStateAction, useState } from "react";
-import { getMarcaFromSigla, MarcheMezzi } from "../misc/marcheMezzi.ts";
+import { MarcheMezzi } from "../misc/marcheMezzi.ts";
 
 interface Props {
   veicolo: Veicolo;

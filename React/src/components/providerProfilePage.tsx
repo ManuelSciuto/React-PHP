@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { ProviderData } from "../pages/profilo";
 import LoadingSpinner from "./svgs/loadingSpinner";
 import OptionIcon from "./svgs/optionIcon";

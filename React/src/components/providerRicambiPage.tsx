@@ -6,7 +6,7 @@ interface Props {
 
 function ProviderRicambiPage({ providerId }: Props) {
   return (
-    <div className="px-2 py-4">
+    <div className="px-2 py-4" key={providerId}>
       <div className="w-full">
         <NavLink
           to="/AggiungiRicambi"
