@@ -3,7 +3,7 @@ version: "3.9"
 services:
   backend:
     container_name: backend
-    image: manuel393/backend-reactphp:v1.0
+    build: ./php
     ports:
       - "8000:80"
     networks:
@@ -11,52 +11,13 @@ services:
     depends_on:
       - db
 
-  frontend-1:
-    container_name: frontend-1
-    build:
-      context: React/
-      args:
-        REACT_APP_REPLICA_NUM: 1
+  frontend:
+    container_name: frontend
+    build: ./React
     expose:
       - "80"
     ports:
       - "3001:80"
-    environment:
-      - NUM_FRONTEND=1
-    depends_on:
-      - backend
-    networks:
-      - webnetwork
-
-  frontend-2:
-    container_name: frontend-2
-    build:
-      context: React/
-      args:
-        REACT_APP_REPLICA_NUM: 2
-    expose:
-      - "80"
-    ports:
-      - "3002:80"
-    environment:
-      - NUM_FRONTEND=2
-    depends_on:
-      - backend
-    networks:
-      - webnetwork
-
-  frontend-3:
-    container_name: frontend-3
-    build:
-      context: React/
-      args:
-        REACT_APP_REPLICA_NUM: 3
-    expose:
-      - "80"
-    ports:
-      - "3003:80"
-    environment:
-      - NUM_FRONTEND=3
     depends_on:
       - backend
     networks:
@@ -69,9 +30,7 @@ services:
     networks:
       - webnetwork
     depends_on:
-      - frontend-1
-      - frontend-2
-      - frontend-3
+      - frontend
 
   db:
     image: mysql:latest

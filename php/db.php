@@ -10,11 +10,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // PER DOCKER $dbhost = "db", PER LOCAL DEV $dbhost = "localhost";
-$dbhost = "localhost";
+$dbhost = "db";
 $dbport = "3306";
 $dbuser = "root";
 // PER DOCKER $dbpass = "password", PER LOCAL DEV $dbpass = "";
-$dbpass = "";
+$dbpass = "password";
 $dbname = "react-php";
 
 $conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname, $dbport);
